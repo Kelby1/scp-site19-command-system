@@ -563,3 +563,163 @@ color: #8f9992;
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================
+   CLASSIFIED SCP FILE
+========================= */
+
+.classified-file {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.classified-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #2f3833;
+}
+
+.classified-header h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.classified-level {
+  padding: 8px 12px;
+  border: 1px solid #6b5c3d;
+  color: #c0ad76;
+  font-size: 0.7rem;
+}
+
+.classified-banner {
+  padding: 15px;
+  border: 1px solid #4c3939;
+  background: #171211;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #b97878;
+  font-size: 0.7rem;
+}
+
+.classified-banner strong {
+  font-size: 0.65rem;
+}
+
+.classified-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.classified-field {
+  padding: 15px;
+  border: 1px solid #2f3833;
+  background: #111512;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.classified-field span {
+  color: #7e8981;
+  font-size: 0.65rem;
+}
+
+.classified-field strong {
+  font-size: 0.8rem;
+  color: #d8dedb;
+}
+
+.classified-section {
+  padding: 20px;
+  border: 1px solid #2f3833;
+  background: #111512;
+}
+
+.classified-section__title {
+  padding-bottom: 12px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #2f3833;
+  color: #aeb8b0;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.classified-section p {
+  line-height: 1.8;
+  font-size: 0.8rem;
+  color: #9ca69f;
+}
+
+.redacted-line {
+  margin-top: 12px;
+  color: #303631;
+  letter-spacing: 0.05em;
+}
+
+.classified-back {
+  display: inline-block;
+  width: fit-content;
+  padding: 10px 15px;
+  border: 1px solid #3e4b43;
+  color: #aeb8b0;
+  text-decoration: none;
+  font-size: 0.7rem;
+}
+
+.classified-back:hover {
+  background: #151a16;
+  color: #e8eee9;
+}
+
+.classified-warning {
+  padding: 40px;
+  border: 1px solid #4c3939;
+  background: #171211;
+}
+
+.classified-warning h2 {
+  color: #b97878;
+  margin-bottom: 15px;
+}
+
+.classified-warning p {
+  margin-bottom: 20px;
+}
+
+/* Database button now uses Link instead of button */
+
+.scp-card__button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .classified-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .classified-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .classified-banner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .classified-grid {
+    grid-template-columns: 1fr;
+  }
+}

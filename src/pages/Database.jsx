@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import scpData from "../data/scpData";
 
 function Database() {
@@ -81,9 +82,12 @@ function Database() {
               </span>
             </div>
 
-            <button className="scp-card__button">
-              ACCESS FILE
-            </button>
+            <Link
+  to={`/database/${scp.id}`}
+  className="scp-card__button"
+>
+  ACCESS FILE
+</Link>
           </article>
         ))}
       </div>

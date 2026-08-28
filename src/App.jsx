@@ -7,6 +7,7 @@ import Personnel from "./pages/Personnel";
 import Facilities from "./pages/Facilities";
 import Incidents from "./pages/Incidents";
 import Terminal from "./pages/Terminal";
+import SCPFile from "./pages/SCPFile.jsx";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/database" element={<Database />} />
+        <Route path="/database/:scpId" element={<SCPFile />} />
         <Route path="/personnel" element={<Personnel />} />
         <Route path="/facilities" element={<Facilities />} />
         <Route path="/incidents" element={<Incidents />} />
