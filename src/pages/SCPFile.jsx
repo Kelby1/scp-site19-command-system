@@ -1,12 +1,31 @@
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import scpData from "../data/scpData";
+import { getSCPById } from "../services/scpServices";
 
 function SCPFile() {
   const { scpId } = useParams();
 
-  const scp = scpData.find(
-    (item) => item.id.toLowerCase() === scpId.toLowerCase()
+  const [scp, setScp] = useState(null);
+const [loading, setLoading] = useState(true);
+useEffect(() => {
+  async function loadSCP() {
+    const data = await getSCPById(scpId);
+
+    setScp(data);
+    setLoading(false);
+  }
+
+  loadSCP();
+}, [scpId]);
+
+if (loading) {
+  return (
+    <section className="classified-file">
+      <h2>ACCESSING CLASSIFIED RECORD...</h2>
+      <p>Establishing connection with Site-19 database.</p>
+    </section>
   );
+}
 
   if (!scp) {
     return (

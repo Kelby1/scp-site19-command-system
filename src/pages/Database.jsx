@@ -1,10 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import scpData from "../data/scpData";
+import { getAllSCPs } from "../services/scpServices";
+
 
 function Database() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedClass, setSelectedClass] = useState("ALL");
+  const [scpData, setScpData] = useState([]);
+const [searchTerm, setSearchTerm] = useState("");
+const [selectedClass, setSelectedClass] = useState("ALL");
+
+useEffect(() => {
+  async function loadSCPs() {
+    const data = await getAllSCPs();
+    setScpData(data);
+  }
+
+  loadSCPs();
+}, []);
 
   const filteredSCPs = scpData.filter((scp) => {
     const matchesSearch =
