@@ -1,10 +1,13 @@
+import MainLayout from "./components/layout/MainLayout.jsx";
+
 function App(){
   return(
-    <div>
-      <h1>SCP FOUNDATION</h1>
-      <p>SITE-19 SECURE COMMAND SYSTEM</p>
-      <p>System Status: ONLINE</p>
-    </div>
+    <MainLayout>
+      <section>
+        <h2>COMMAND CENTER</h2>
+        <p>Welcome to the site-19 Secure Command System.</p>
+      </section>
+    </MainLayout>
   );
 }
 

@@ -1,11 +1,152 @@
-* {margin: 0;
+* {
+  margin: 0;
   padding: 0;
-  box-sizing: border-box;}
+  box-sizing: border-box;
+  }
 
-body{
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: #111;
-  color: #e0e0e0;
-  font-family: "Courier New", monospace;
+body {
+min-width: 320px;
+min-height: 100vh;
+background: #0b0d0c;
+color: #d8dedb;
+font-family: "Courier New", monospace;
+}
+
+button {
+font: inherit;
+}
+
+.app-layout {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+.header {
+min-height: 80px;
+padding: 15px 30px;
+border-bottom: 1px solid #2f3833;
+display: flex;
+align-items: center;
+justify-content: space-between;
+background: #111512;
+}
+
+.header__brand {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+
+.header__logo {
+width: 48px;
+height: 48px;
+border: 2px solid #d8dedb;
+display: grid;
+place-items: center;
+font-weight: bold;
+}
+
+.header h1 {
+font-size: 1rem;
+letter-spacing: 0.08em;
+}
+
+.header p {
+margin-top: 5px;
+font-size: 0.75rem;
+color: #8f9992;
+}
+
+.header__status {
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 0.75rem;
+color: #9ab0a1;
+}
+
+.status-indicator {
+width: 9px;
+height: 9px;
+border-radius: 50%;
+background: #6f9f7a;
+}
+
+.app-layout__body {
+flex: 1;
+display: flex;
+}
+
+.sidebar {
+width: 240px;
+min-height: calc(100vh - 80px);
+padding: 25px 15px;
+border-right: 1px solid #2f3833;
+background: #0e110f;
+display: flex;
+flex-direction: column;
+}
+
+.sidebar__title {
+margin-bottom: 20px;
+padding: 0 10px;
+font-size: 0.7rem;
+color: #7e8981;
+letter-spacing: 0.08em;
+}
+
+.sidebar nav {
+display: flex;
+flex-direction: column;
+gap: 6px;
+}
+
+.sidebar__item {
+width: 100%;
+padding: 12px 10px;
+border: 1px solid transparent;
+background: transparent;
+color: #aeb8b0;
+text-align: left;
+cursor: pointer;
+transition: 0.2s;
+}
+
+.sidebar__item:hover {
+border-color: #3e4b43;
+background: #151a16;
+color: #e8eee9;
+}
+
+.sidebar__footer {
+margin-top: auto;
+padding: 15px 10px;
+border-top: 1px solid #2f3833;
+display: flex;
+flex-direction: column;
+gap: 6px;
+font-size: 0.7rem;
+color: #7e8981;
+}
+
+.sidebar__footer strong {
+color: #d8dedb;
+font-size: 0.85rem;
+}
+
+.main-content {
+flex: 1;
+padding: 35px;
+background: #0b0d0c;
+}
+
+.main-content h2 {
+margin-bottom: 10px;
+font-size: 1.5rem;
+letter-spacing: 0.08em;
+}
+
+.main-content p {
+color: #8f9992;
 }
