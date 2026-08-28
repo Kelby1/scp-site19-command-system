@@ -422,3 +422,144 @@ color: #8f9992;
   background: #151a16;
   color: #e8eee9;
 }
+
+/* =========================
+   SCP DATABASE
+========================= */
+
+.scp-database {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.database-controls {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 12px;
+}
+
+.database-controls input,
+.database-controls select {
+  padding: 14px;
+  border: 1px solid #2f3833;
+  outline: none;
+  background: #111512;
+  color: #d8dedb;
+  font-family: inherit;
+}
+
+.database-controls input:focus,
+.database-controls select:focus {
+  border-color: #58675d;
+}
+
+.database-controls input::placeholder {
+  color: #657068;
+}
+
+.scp-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.scp-card {
+  padding: 20px;
+  border: 1px solid #2f3833;
+  background: #111512;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.scp-card:hover {
+  border-color: #4c5a50;
+}
+
+.scp-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scp-card__header > span:first-child {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.scp-card__header > span:last-child {
+  padding: 4px 8px;
+  border: 1px solid #3e4b43;
+  font-size: 0.65rem;
+}
+
+.class-safe {
+  color: #9ab0a1;
+}
+
+.class-euclid {
+  color: #c0ad76;
+}
+
+.class-keter {
+  color: #b97878;
+}
+
+.scp-card h3 {
+  font-size: 1.1rem;
+}
+
+.scp-card p {
+  line-height: 1.6;
+  font-size: 0.75rem;
+  color: #8f9992;
+}
+
+.scp-card__details {
+  padding: 12px 0;
+  border-top: 1px solid #202720;
+  border-bottom: 1px solid #202720;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 0.65rem;
+  color: #7e8981;
+}
+
+.scp-card__details strong {
+  color: #aeb8b0;
+}
+
+.scp-card__button {
+  padding: 11px;
+  border: 1px solid #3e4b43;
+  background: transparent;
+  color: #aeb8b0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.7rem;
+}
+
+.scp-card__button:hover {
+  background: #151a16;
+  color: #e8eee9;
+}
+
+.database-empty {
+  padding: 40px;
+  border: 1px dashed #3e4b43;
+  text-align: center;
+  color: #7e8981;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 800px) {
+  .scp-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .database-controls {
+    grid-template-columns: 1fr;
+  }
+}
