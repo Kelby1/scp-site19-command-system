@@ -411,3 +411,14 @@ color: #8f9992;
     grid-template-columns: 1fr;
   }
 }
+
+.sidebar__item {
+  display: block;
+  text-decoration: none;
+}
+
+.sidebar__item--active {
+  border-color: #3e4b43;
+  background: #151a16;
+  color: #e8eee9;
+}

@@ -1,59 +1,24 @@
+import { Routes, Route } from "react-router-dom";
 import MainLayout from "./components/layout/MainLayout";
-import StatusCard from "./components/dashboard/StatusCard";
-import SystemStatus from "./components/dashboard/SystemStatus";
-import ActivityLog from "./components/dashboard/ActivityLog";
-import ActiveAlerts from "./components/dashboard/ActiveAlerts";
+
+import Dashboard from "./pages/Dashboard";
+import Database from "./pages/Database";
+import Personnel from "./pages/Personnel";
+import Facilities from "./pages/Facilities";
+import Incidents from "./pages/Incidents";
+import Terminal from "./pages/Terminal";
 
 function App() {
   return (
     <MainLayout>
-      <section className="command-center">
-        <div className="page-heading">
-          <div>
-            <p className="page-heading__eyebrow">
-              SITE-19 // OPERATIONS
-            </p>
-            <h2>COMMAND CENTER</h2>
-          </div>
-
-          <span className="page-heading__status">
-            ● LIVE STATUS
-          </span>
-        </div>
-
-        <div className="status-grid">
-          <StatusCard
-            label="ACTIVE PERSONNEL"
-            value="247"
-            status="ON SITE"
-          />
-
-          <StatusCard
-            label="CONTAINED OBJECTS"
-            value="89"
-            status="STABLE"
-          />
-
-          <StatusCard
-            label="ACTIVE ALERTS"
-            value="02"
-            status="MONITORING"
-          />
-
-          <StatusCard
-            label="THREAT LEVEL"
-            value="ELEVATED"
-            status="LEVEL 3"
-          />
-        </div>
-
-        <div className="dashboard-grid">
-          <SystemStatus />
-          <ActiveAlerts />
-        </div>
-
-        <ActivityLog />
-      </section>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/database" element={<Database />} />
+        <Route path="/personnel" element={<Personnel />} />
+        <Route path="/facilities" element={<Facilities />} />
+        <Route path="/incidents" element={<Incidents />} />
+        <Route path="/terminal" element={<Terminal />} />
+      </Routes>
     </MainLayout>
   );
 }
