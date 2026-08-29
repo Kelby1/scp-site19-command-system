@@ -723,3 +723,168 @@ color: #8f9992;
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================
+   SCP DATABASE
+========================================= */
+
+.scp-database {
+  width: 100%;
+}
+
+.page-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #2d3735;
+}
+
+.page-heading__eyebrow {
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+}
+
+.page-heading h2 {
+  margin-bottom: 0.5rem;
+}
+
+.page-heading__status {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #3b4a46;
+  white-space: nowrap;
+  font-size: 0.8rem;
+}
+
+.scp-database__controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.scp-database__controls input,
+.scp-database__controls select {
+  padding: 0.8rem;
+  border: 1px solid #3b4a46;
+  background: #111817;
+  color: inherit;
+  font-family: inherit;
+}
+
+.scp-database__controls input {
+  flex: 1;
+}
+
+.scp-database__controls select {
+  min-width: 180px;
+}
+
+.scp-database__status {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #2d3735;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+}
+
+.scp-database__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.scp-record {
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  padding: 1.25rem;
+  border: 1px solid #3b4a46;
+  background: #111817;
+}
+
+.scp-record:hover {
+  border-color: #7b8782;
+}
+
+.scp-record__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+}
+
+.scp-record__header span:last-child {
+  padding: 0.2rem 0.5rem;
+  border: 1px solid #3b4a46;
+}
+
+.scp-record h3 {
+  margin: 0 0 1.5rem;
+  font-size: 1.4rem;
+}
+
+.scp-record__details {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.scp-record__details div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.scp-record__details span {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  opacity: 0.65;
+}
+
+.scp-record__details strong {
+  font-size: 0.95rem;
+}
+
+.scp-record button {
+  margin-top: auto;
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #3b4a46;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.scp-record button:hover {
+  border-color: #d0d7d3;
+}
+
+.scp-database__empty {
+  padding: 3rem;
+  border: 1px dashed #3b4a46;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .page-heading {
+    flex-direction: column;
+  }
+
+  .scp-database__controls {
+    flex-direction: column;
+  }
+
+  .scp-database__status {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
