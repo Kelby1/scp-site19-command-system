@@ -1,5 +1,21 @@
 import { supabase } from "../lib/supabase";
 
+function logTelemetry({
+  requestId,
+  status,
+  durationMs,
+  attempts,
+  errorCode = null,
+}) {
+  console.info("[FOUNDATION TELEMETRY]", {
+    requestId,
+    status,
+    durationMs,
+    attempts,
+    errorCode,
+  });
+}
+
 function isRetryableError(error) {
   if (!error) {
     return false;
@@ -61,6 +77,7 @@ export const foundationClient = {
     } = options;
 
     const requestId = createRequestId();
+    const startedAt = performance.now();
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
@@ -73,21 +90,26 @@ export const foundationClient = {
           throw result.error;
         }
 
+        const durationMs = Math.round(
+          performance.now() - startedAt
+        );
+
+        logTelemetry({
+          requestId,
+          status: "SUCCESS",
+          durationMs,
+          attempts: attempt + 1,
+        });
+
         return {
           data: result.data,
           error: null,
           requestId,
         };
       } catch (error) {
-        const isTimeout =
-          error?.message === "FOUNDATION_REQUEST_TIMEOUT";
-
+        const isTimeout = error?.message === "FOUNDATION_REQUEST_TIMEOUT";
         const retryable = isRetryableError(error);
-
-const canRetry =
-  retry &&
-  retryable &&
-  attempt < maxRetries;
+        const canRetry = retry && retryable && attempt < maxRetries;
 
         console.error(
           `[FOUNDATION][${requestId}][ATTEMPT ${attempt + 1}]`,
@@ -99,19 +121,32 @@ const canRetry =
           continue;
         }
 
+        const errorCode = isTimeout
+          ? "FOUNDATION_TIMEOUT"
+          : "FOUNDATION_REQUEST_FAILED";
+
+        const durationMs = Math.round(
+          performance.now() - startedAt
+        );
+
+        logTelemetry({
+          requestId,
+          status: "FAILED",
+          durationMs,
+          attempts: attempt + 1,
+          errorCode,
+        });
+
         return {
           data: null,
           error: {
-            code: isTimeout
-              ? "FOUNDATION_TIMEOUT"
-              : "FOUNDATION_REQUEST_FAILED",
-
+            code: errorCode,
             message: isTimeout
               ? "Foundation request timed out"
               : "Foundation database request failed",
-
             requestId,
             attempts: attempt + 1,
+            retryable,
             originalError: error,
           },
           requestId,
