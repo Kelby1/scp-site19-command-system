@@ -1,4 +1,4 @@
-import { foundationClient } from "../foundation/foundationClient";
+import { foundationClient } from "../../foundation/foundationClient";
 
 export const scpService = {
   async getAll() {
@@ -6,7 +6,6 @@ export const scpService = {
       supabase
         .from("scp_objects")
         .select("*")
-        .order("item_number", { ascending: true })
     );
   },
 

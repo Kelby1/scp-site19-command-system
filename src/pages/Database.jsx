@@ -1,33 +1,48 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllSCPs } from "../services/scpServices";
+import { scpService } from "../services/scp/scpService";
 
 
 function Database() {
   const [scpData, setScpData] = useState([]);
 const [searchTerm, setSearchTerm] = useState("");
 const [selectedClass, setSelectedClass] = useState("ALL");
+const [isLoading, setIsLoading] = useState(true);
+const [errorMessage, setErrorMessage] = useState("");
 
 useEffect(() => {
   async function loadSCPs() {
-    const data = await getAllSCPs();
-    setScpData(data);
+    setIsLoading(true);
+    setErrorMessage("");
+
+    const { data, error } = await scpService.getAll();
+    
+
+    if (error) {
+      console.error("Failed to load SCP records:", error);
+      setErrorMessage("DATABASE CONNECTION FAILURE");
+      setScpData([]);
+    } else {
+      setScpData(data || []);
+    }
+
+    setIsLoading(false);
   }
 
   loadSCPs();
 }, []);
 
   const filteredSCPs = scpData.filter((scp) => {
-    const matchesSearch =
-      scp.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      scp.name.toLowerCase().includes(searchTerm.toLowerCase());
+  const matchesSearch =
+    scp.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    scp.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesClass =
-      selectedClass === "ALL" ||
-      scp.objectClass === selectedClass;
+  const matchesClass =
+    selectedClass === "ALL" ||
+    scp.object_class === selectedClass;
 
-    return matchesSearch && matchesClass;
-  });
+  return matchesSearch && matchesClass;
+});
 
   return (
     <section className="scp-database">
@@ -62,52 +77,75 @@ useEffect(() => {
           <option value="EUCLID">EUCLID</option>
           <option value="KETER">KETER</option>
         </select>
+
       </div>
 
-      <div className="scp-grid">
-        {filteredSCPs.map((scp) => (
-          <article className="scp-card" key={scp.id}>
-            <div className="scp-card__header">
-              <span>{scp.id}</span>
+    <div className="scp-grid">
+  {isLoading && (
+    <div className="database-loading">
+      <span>ACCESSING FOUNDATION DATABASE...</span>
+      <p>RETRIEVING CLASSIFIED RECORDS</p>
+    </div>
+  )}
 
-              <span className={`class-${scp.objectClass.toLowerCase()}`}>
-                {scp.objectClass}
-              </span>
-            </div>
+  {!isLoading && errorMessage && (
+    <div className="database-error">
+      <strong>⚠ {errorMessage}</strong>
+      <p>
+        Unable to retrieve containment records.
+        Check the Foundation data connection.
+      </p>
+    </div>
+  )}
 
-            <h3>{scp.name}</h3>
+  {!isLoading && !errorMessage &&
+    filteredSCPs.map((scp) => (
+      <article className="scp-card" key={scp.id}>
+        <div className="scp-card__header">
+          <span>{scp.id}</span>
 
-            <p>{scp.description}</p>
-
-            <div className="scp-card__details">
-              <span>
-                THREAT: <strong>{scp.threatLevel}</strong>
-              </span>
-
-              <span>
-                STATUS: <strong>{scp.status}</strong>
-              </span>
-
-              <span>
-                CLEARANCE: <strong>LEVEL {scp.clearanceLevel}</strong>
-              </span>
-            </div>
-
-            <Link
-  to={`/database/${scp.id}`}
-  className="scp-card__button"
->
-  ACCESS FILE
-</Link>
-          </article>
-        ))}
-      </div>
-
-      {filteredSCPs.length === 0 && (
-        <div className="database-empty">
-          NO MATCHING RECORDS FOUND.
+          <span className={`class-${scp.object_class.toLowerCase()}`}>
+            {scp.object_class}
+          </span>
         </div>
-      )}
+
+        <h3>{scp.name}</h3>
+
+        <p>{scp.description}</p>
+
+        <div className="scp-card__details">
+          <span>
+            THREAT: <strong>{scp.threat_level}</strong>
+          </span>
+
+          <span>
+            STATUS: <strong>{scp.status}</strong>
+          </span>
+
+          <span>
+            CLEARANCE:
+            <strong> LEVEL {scp.clearance_level}</strong>
+          </span>
+        </div>
+
+        <Link
+          to={`/database/${scp.id}`}
+          className="scp-card__button"
+        >
+          ACCESS FILE
+        </Link>
+      </article>
+    ))}
+</div>
+
+      {!isLoading &&
+  !errorMessage &&
+  filteredSCPs.length === 0 && (
+    <div className="database-empty">
+      NO MATCHING RECORDS FOUND.
+    </div>
+)}
+      
     </section>
   );
 }
