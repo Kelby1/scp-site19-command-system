@@ -1,22 +1,34 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { getSCPById } from "../services/scpServices";
+import { Link, useParams } from "react-router-dom";
+import { scpService } from "../services/scp/scpService";
 
 function SCPFile() {
   const { scpId } = useParams();
 
   const [scp, setScp] = useState(null);
-const [loading, setLoading] = useState(true);
-useEffect(() => {
-  async function loadSCP() {
-    const data = await getSCPById(scpId);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
-    setScp(data);
-    setLoading(false);
-  }
+  useEffect(() => {
+    async function loadSCP() {
+      setIsLoading(true);
+      setErrorMessage("");
 
-  loadSCP();
-}, [scpId]);
+      const { data, error } = await scpService.getById(scpId);
+
+      if (error) {
+        console.error("Failed to load SCP file:", error);
+        setErrorMessage("CLASSIFIED RECORD UNAVAILABLE");
+        setScp(null);
+      } else {
+        setScp(data);
+      }
+
+      setIsLoading(false);
+    }
+
+    loadSCP();
+  }, [scpId]);
 
 if (loading) {
   return (
@@ -27,16 +39,21 @@ if (loading) {
   );
 }
 
-  if (!scp) {
+  if (isLoading) {
+    return (
+      <section className="classified-file">
+        <h2>ACCESSING CLASSIFIED RECORD...</h2>
+        <p>VERIFYING FOUNDATION DATABASE ACCESS.</p>
+      </section>
+    );
+  }
+
+  if (errorMessage || !scp) {
     return (
       <section className="classified-file">
         <div className="classified-warning">
-          <h2>RECORD NOT FOUND</h2>
-
-          <p>
-            The requested SCP record does not exist in the
-            Site-19 database.
-          </p>
+          <h2>ACCESS FAILURE</h2>
+          <p>{errorMessage || "RECORD NOT FOUND"}</p>
 
           <Link to="/database" className="classified-back">
             RETURN TO DATABASE

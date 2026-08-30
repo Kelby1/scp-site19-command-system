@@ -33,16 +33,23 @@ useEffect(() => {
 }, []);
 
   const filteredSCPs = scpData.filter((scp) => {
-  const matchesSearch =
-    scp.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    scp.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const scpId = scp?.id || "";
+    const scpName = scp?.name || "";
+    const scpClass = scp?.objectClass || "";
 
-  const matchesClass =
-    selectedClass === "ALL" ||
-    scp.object_class === selectedClass;
+    const term = searchTerm.toLowerCase();
 
-  return matchesSearch && matchesClass;
-});
+    const matchesSearch =
+      scpId.toLowerCase().includes(term) ||
+      scpName.toLowerCase().includes(term) ||
+      scpClass.toLowerCase().includes(term);
+
+    const matchesClass =
+      selectedClass === "ALL" ||
+      scpClass.toUpperCase() === selectedClass.toUpperCase();
+
+    return matchesSearch && matchesClass;
+  });
 
   return (
     <section className="scp-database">
@@ -104,8 +111,8 @@ useEffect(() => {
         <div className="scp-card__header">
           <span>{scp.id}</span>
 
-          <span className={`class-${scp.object_class.toLowerCase()}`}>
-            {scp.object_class}
+          <span className={`class-${(scp.objectClass || "").toLowerCase()}`}>
+            {scp.objectClass}
           </span>
         </div>
 
@@ -115,7 +122,7 @@ useEffect(() => {
 
         <div className="scp-card__details">
           <span>
-            THREAT: <strong>{scp.threat_level}</strong>
+            THREAT: <strong>{scp.threatLevel}</strong>
           </span>
 
           <span>
@@ -124,7 +131,7 @@ useEffect(() => {
 
           <span>
             CLEARANCE:
-            <strong> LEVEL {scp.clearance_level}</strong>
+            <strong> LEVEL {scp.clearanceLevel}</strong>
           </span>
         </div>
 
