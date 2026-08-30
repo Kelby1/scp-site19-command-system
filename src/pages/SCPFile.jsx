@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { scpService } from "../services/scp/scpService";
 
@@ -8,36 +8,46 @@ function SCPFile() {
   const [scp, setScp] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const scpRequestIdRef = useRef(0);
+
+  async function loadSCP() {
+  const requestId = ++scpRequestIdRef.current;
+
+  setIsLoading(true);
+  setErrorMessage("");
+
+  const { data, error } = await scpService.getById(scpId);
+
+  if (requestId !== scpRequestIdRef.current) {
+    console.log(
+      `[SCP FILE] Ignoring stale request ${requestId}`
+    );
+
+    return;
+  }
+
+  if (error) {
+    console.error(
+      `[SCP FILE][${error?.requestId ?? "UNKNOWN"}]`,
+      error
+    );
+
+    setScp(null);
+    setErrorMessage("CLASSIFIED RECORD UNAVAILABLE");
+  } else {
+    setScp(data);
+  }
+
+  setIsLoading(false);
+}
 
   useEffect(() => {
-    async function loadSCP() {
-      setIsLoading(true);
-      setErrorMessage("");
+  loadSCP();
 
-      const { data, error } = await scpService.getById(scpId);
-
-      if (error) {
-        console.error("Failed to load SCP file:", error);
-        setErrorMessage("CLASSIFIED RECORD UNAVAILABLE");
-        setScp(null);
-      } else {
-        setScp(data);
-      }
-
-      setIsLoading(false);
-    }
-
-    loadSCP();
-  }, [scpId]);
-
-if (loading) {
-  return (
-    <section className="classified-file">
-      <h2>ACCESSING CLASSIFIED RECORD...</h2>
-      <p>Establishing connection with Site-19 database.</p>
-    </section>
-  );
-}
+  return () => {
+    scpRequestIdRef.current++;
+  };
+}, [scpId]);
 
   if (isLoading) {
     return (
@@ -53,7 +63,16 @@ if (loading) {
       <section className="classified-file">
         <div className="classified-warning">
           <h2>ACCESS FAILURE</h2>
+
           <p>{errorMessage || "RECORD NOT FOUND"}</p>
+
+          <button
+            type="button"
+            onClick={loadSCP}
+            className="database-retry"
+          >
+            RETRY ACCESS
+          </button>
 
           <Link to="/database" className="classified-back">
             RETURN TO DATABASE

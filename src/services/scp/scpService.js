@@ -16,11 +16,17 @@ function mapSCPRecord(record) {
 
 export const scpService = {
   async getAll() {
-    const { data, error } = await foundationClient.request((supabase) =>
-      supabase
-        .from("scp_objects")
-        .select("*")
-    );
+    const { data, error } = await foundationClient.request(
+  (supabase) =>
+    supabase
+      .from("scp_objects")
+      .select("*"),
+  {
+    retry: true,
+    maxRetries: 2,
+    retryDelayMs: 500,
+  }
+);
 
     if (error) {
       return {
@@ -36,13 +42,19 @@ export const scpService = {
   },
 
   async getById(id) {
-    const { data, error } = await foundationClient.request((supabase) =>
-      supabase
-        .from("scp_objects")
-        .select("*")
-        .eq("id", id)
-        .single()
-    );
+    const { data, error } = await foundationClient.request(
+  (supabase) =>
+    supabase
+      .from("scp_objects")
+      .select("*")
+      .eq("id", id)
+      .single(),
+  {
+    retry: true,
+    maxRetries: 2,
+    retryDelayMs: 500,
+  }
+);
 
     if (error) {
       return {

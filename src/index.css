@@ -888,3 +888,15 @@ color: #8f9992;
     gap: 0.75rem;
   }
 }
+
+.status-connecting {
+  opacity: 0.7;
+}
+
+.status-offline {
+  font-weight: bold;
+}
+
+.status-online {
+  font-weight: bold;
+}

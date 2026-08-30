@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { scpService } from "../services/scp/scpService";
 
@@ -10,26 +10,47 @@ const [selectedClass, setSelectedClass] = useState("ALL");
 const [isLoading, setIsLoading] = useState(true);
 const [errorMessage, setErrorMessage] = useState("");
 
-useEffect(() => {
-  async function loadSCPs() {
-    setIsLoading(true);
-    setErrorMessage("");
+const databaseRequestIdRef = useRef(0);
 
-    const { data, error } = await scpService.getAll();
-    
+async function loadSCPs() {
+  const requestId = ++databaseRequestIdRef.current;
 
-    if (error) {
-      console.error("Failed to load SCP records:", error);
-      setErrorMessage("DATABASE CONNECTION FAILURE");
-      setScpData([]);
-    } else {
-      setScpData(data || []);
-    }
+  setIsLoading(true);
+  setErrorMessage("");
 
-    setIsLoading(false);
+  const { data, error } = await scpService.getAll();
+
+  // A newer request has already started.
+  // Ignore this older response.
+  if (requestId !== databaseRequestIdRef.current) {
+    console.log(
+      `[DATABASE] Ignoring stale request ${requestId}`
+    );
+
+    return;
   }
 
+  if (error) {
+    console.error(
+      `[DATABASE][${error?.requestId ?? "UNKNOWN"}]`,
+      error
+    );
+
+    setScpData([]);
+    setErrorMessage("DATABASE CONNECTION FAILURE");
+  } else {
+    setScpData(data || []);
+  }
+
+  setIsLoading(false);
+}
+
+  useEffect(() => {
   loadSCPs();
+
+  return () => {
+    databaseRequestIdRef.current++;
+  };
 }, []);
 
   const filteredSCPs = scpData.filter((scp) => {
@@ -62,9 +83,21 @@ useEffect(() => {
           <h2>SCP DATABASE</h2>
         </div>
 
-        <span className="page-heading__status">
-          ● DATABASE ONLINE
-        </span>
+        <span
+  className={`page-heading__status ${
+    isLoading
+      ? "status-connecting"
+      : errorMessage
+      ? "status-offline"
+      : "status-online"
+  }`}
+>
+  {isLoading
+    ? "● DATABASE CONNECTING"
+    : errorMessage
+    ? "● DATABASE OFFLINE"
+    : "● DATABASE ONLINE"}
+</span>
       </div>
 
       <div className="database-controls">
@@ -96,14 +129,23 @@ useEffect(() => {
   )}
 
   {!isLoading && errorMessage && (
-    <div className="database-error">
-      <strong>⚠ {errorMessage}</strong>
-      <p>
-        Unable to retrieve containment records.
-        Check the Foundation data connection.
-      </p>
-    </div>
-  )}
+  <div className="database-error">
+    <strong>⚠ {errorMessage}</strong>
+
+    <p>
+      Unable to retrieve containment records.
+      Check the Foundation data connection.
+    </p>
+
+    <button
+      type="button"
+      onClick={loadSCPs}
+      className="database-retry"
+    >
+      RETRY CONNECTION
+    </button>
+  </div>
+)}
 
   {!isLoading && !errorMessage &&
     filteredSCPs.map((scp) => (
