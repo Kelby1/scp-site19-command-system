@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 function ProtectedRoute({ children }) {
@@ -7,13 +7,16 @@ function ProtectedRoute({ children }) {
     isAuthLoading,
   } = useAuth();
 
-  const location = useLocation();
-
   if (isAuthLoading) {
     return (
       <section className="auth-loading">
-        <p>SITE-19 // SECURITY SYSTEM</p>
-        <h2>VERIFYING PERSONNEL CREDENTIALS...</h2>
+        <p>
+          SITE-19 // SECURITY SYSTEM
+        </p>
+
+        <h2>
+          VERIFYING PERSONNEL CREDENTIALS...
+        </h2>
       </section>
     );
   }
@@ -23,7 +26,6 @@ function ProtectedRoute({ children }) {
       <Navigate
         to="/login"
         replace
-        state={{ from: location }}
       />
     );
   }

@@ -5,7 +5,6 @@ import {
 
 import {
   Link,
-  useLocation,
   useNavigate,
 } from "react-router-dom";
 
@@ -13,11 +12,8 @@ import { authService } from "../services/scp/auth/authService";
 import { useAuth } from "../context/AuthContext";
 
 function Login() {
-  const [email, setEmail] =
-    useState("");
-
-  const [password, setPassword] =
-    useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [isSubmitting, setIsSubmitting] =
     useState(false);
@@ -29,7 +25,6 @@ function Login() {
     useState("");
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const {
     isAuthenticated,
@@ -39,18 +34,14 @@ function Login() {
     profileError,
   } = useAuth();
 
-  
-
-  
-
   /*
-   * IMPORTANT:
+   * Post-login authorization flow.
    *
-   * Navigation happens only after
-   * AuthContext has loaded the real
-   * personnel profile.
+   * Every successful ACTIVE login starts
+   * a fresh Site-19 session at "/".
    *
-   * No arbitrary setTimeout().
+   * We deliberately do NOT restore the
+   * previous browser route.
    */
   useEffect(() => {
     if (!isAuthenticated) {
@@ -65,9 +56,16 @@ function Login() {
     }
 
     if (profileError || !profile) {
+      console.error(
+        "[AUTH][POST LOGIN] PROFILE ERROR",
+        profileError
+      );
+
       navigate(
         "/access-denied",
-        { replace: true }
+        {
+          replace: true,
+        }
       );
 
       return;
@@ -79,7 +77,9 @@ function Login() {
     ) {
       navigate(
         "/pending",
-        { replace: true }
+        {
+          replace: true,
+        }
       );
 
       return;
@@ -91,7 +91,9 @@ function Login() {
     ) {
       navigate(
         "/access-denied",
-        { replace: true }
+        {
+          replace: true,
+        }
       );
 
       return;
@@ -103,31 +105,32 @@ function Login() {
     ) {
       navigate(
         "/access-denied",
-        { replace: true }
+        {
+          replace: true,
+        }
       );
 
       return;
     }
 
-
-    const destination =
-      location.state?.freshLogin
-        ? "/"
-        : location.state?.from?.pathname || "/";
-
     console.log(
       "[AUTH][POST LOGIN REDIRECT]",
       {
-        destination,
+        destination: "/",
         role: profile.role,
-        status: profile.accountStatus,
-        clearance: profile.clearanceLevel,
+        status:
+          profile.accountStatus,
+        clearance:
+          profile.clearanceLevel,
       }
     );
 
-    navigate(destination, {
-      replace: true,
-    });
+    navigate(
+      "/",
+      {
+        replace: true,
+      }
+    );
   }, [
     isAuthenticated,
     isAuthLoading,
@@ -135,7 +138,6 @@ function Login() {
     profile,
     profileError,
     navigate,
-    location.state,
   ]);
 
   async function handleSubmit(event) {
@@ -186,18 +188,26 @@ function Login() {
     );
 
     /*
-     * DO NOT navigate here.
+     * Do not navigate here.
      *
-     * AuthContext will receive the new
-     * Supabase session and load the
-     * corresponding profile.
+     * AuthContext receives the new
+     * Supabase session and loads the
+     * correct personnel profile.
      *
-     * The useEffect above performs
-     * navigation only after that
-     * process finishes.
+     * The useEffect above handles
+     * navigation after verification.
      */
-    setIsSubmitting(false);
   }
+
+  const isVerifying =
+    isSubmitting ||
+    (
+      isAuthenticated &&
+      (
+        isAuthLoading ||
+        isProfileLoading
+      )
+    );
 
   return (
     <section className="auth-page">
@@ -227,7 +237,7 @@ function Login() {
             autoComplete="email"
             placeholder="personnel@example.com"
             value={email}
-            disabled={isSubmitting}
+            disabled={isVerifying}
             onChange={(event) =>
               setEmail(
                 event.target.value
@@ -245,7 +255,7 @@ function Login() {
             autoComplete="current-password"
             placeholder="ENTER PASSWORD"
             value={password}
-            disabled={isSubmitting}
+            disabled={isVerifying}
             onChange={(event) =>
               setPassword(
                 event.target.value
@@ -268,14 +278,10 @@ function Login() {
           <button
             type="submit"
             className="auth-submit"
-            disabled={
-              isSubmitting ||
-              isAuthLoading ||
-              isProfileLoading
-            }
+            disabled={isVerifying}
           >
             {isSubmitting
-              ? "AUTHENTICATING..."
+              ? "VERIFYING AUTHORIZATION..."
               : "AUTHENTICATE ACCESS"}
           </button>
         </form>

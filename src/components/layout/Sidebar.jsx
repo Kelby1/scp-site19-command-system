@@ -1,13 +1,35 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import {
+  NavLink,
+  useNavigate,
+} from "react-router-dom";
+
 import { useAuth } from "../../context/AuthContext";
 
 const navigationItems = [
-  { label: "COMMAND CENTER", path: "/" },
-  { label: "SCP DATABASE", path: "/database" },
-  { label: "PERSONNEL", path: "/personnel" },
-  { label: "FACILITIES", path: "/facilities" },
-  { label: "INCIDENTS", path: "/incidents" },
-  { label: "SYSTEM TERMINAL", path: "/terminal" },
+  {
+    label: "COMMAND CENTER",
+    path: "/",
+  },
+  {
+    label: "SCP DATABASE",
+    path: "/database",
+  },
+  {
+    label: "PERSONNEL",
+    path: "/personnel",
+  },
+  {
+    label: "FACILITIES",
+    path: "/facilities",
+  },
+  {
+    label: "INCIDENTS",
+    path: "/incidents",
+  },
+  {
+    label: "SYSTEM TERMINAL",
+    path: "/terminal",
+  },
 ];
 
 function Sidebar() {
@@ -23,53 +45,70 @@ function Sidebar() {
   } = useAuth();
 
   async function handleLogout() {
-    const { success } = await logout();
+    const { success, error } =
+      await logout();
 
-    if (success) {
-      navigate("/login", {
-        replace: true,
+    if (!success) {
+      console.error(
+        "[SIDEBAR][LOGOUT]",
+        error
+      );
 
-        /*
-         * Tell Login.jsx:
-         *
-         * This is an intentional logout.
-         * Do NOT restore the previous user's page.
-         */
-        state: {
-          freshLogin: true,
-        },
-      });
+      return;
     }
+
+    /*
+     * Explicitly end navigation context
+     * for the current user.
+     */
+    navigate(
+      "/login",
+      {
+        replace: true,
+      }
+    );
   }
 
   return (
     <aside className="sidebar">
+
       <p className="sidebar__title">
         SITE-19 // NAVIGATION
       </p>
 
       <nav>
-        {navigationItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) =>
-              `sidebar__item ${
-                isActive ? "sidebar__item--active" : ""
-              }`
-            }
-          >
-            {item.label}
-          </NavLink>
-        ))}
+        {navigationItems.map(
+          (item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({
+                isActive,
+              }) =>
+                `sidebar__item ${
+                  isActive
+                    ? "sidebar__item--active"
+                    : ""
+                }`
+              }
+            >
+              {item.label}
+            </NavLink>
+          )
+        )}
 
         {profile?.role === "ADMIN" &&
-          profile?.accountStatus === "ACTIVE" && (
+          profile?.accountStatus ===
+            "ACTIVE" && (
             <NavLink
               to="/admin"
-              className={({ isActive }) =>
+              className={({
+                isActive,
+              }) =>
                 `sidebar__item ${
-                  isActive ? "sidebar__item--active" : ""
+                  isActive
+                    ? "sidebar__item--active"
+                    : ""
                 }`
               }
             >
@@ -79,6 +118,7 @@ function Sidebar() {
       </nav>
 
       <div className="sidebar__footer">
+
         {isAuthenticated && (
           <>
             {isProfileLoading ? (
@@ -88,29 +128,36 @@ function Sidebar() {
             ) : (
               <>
                 <span>
-                  {profile?.displayName}
+                  {profile?.displayName ??
+                    "UNKNOWN PERSONNEL"}
                 </span>
 
                 <strong>
-                  ROLE: {profile?.role}
+                  ROLE:{" "}
+                  {profile?.role ??
+                    "UNASSIGNED"}
                 </strong>
 
                 <strong>
                   CLEARANCE LEVEL:{" "}
-                  {profile?.clearanceLevel}
+                  {profile?.clearanceLevel ??
+                    0}
                 </strong>
 
                 <span>
                   STATUS:{" "}
-                  {profile?.accountStatus}
+                  {profile?.accountStatus ??
+                    "UNKNOWN"}
                 </span>
               </>
             )}
           </>
         )}
+
       </div>
 
       <div className="sidebar-auth">
+
         {isAuthLoading ? (
           <span>
             VERIFYING SESSION...
@@ -118,6 +165,7 @@ function Sidebar() {
         ) : isAuthenticated ? (
           <>
             <div className="sidebar-auth__user">
+
               <span>
                 AUTHENTICATED
               </span>
@@ -125,6 +173,7 @@ function Sidebar() {
               <small>
                 {user?.email}
               </small>
+
             </div>
 
             <button
@@ -139,18 +188,21 @@ function Sidebar() {
           <button
             type="button"
             onClick={() =>
-              navigate("/login", {
-                state: {
-                  freshLogin: true,
-                },
-              })
+              navigate(
+                "/login",
+                {
+                  replace: true,
+                }
+              )
             }
             className="sidebar-auth__button"
           >
             LOGIN
           </button>
         )}
+
       </div>
+
     </aside>
   );
 }
