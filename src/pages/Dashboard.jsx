@@ -2,8 +2,21 @@ import StatusCard from "../components/dashboard/StatusCard";
 import SystemStatus from "../components/dashboard/SystemStatus";
 import ActivityLog from "../components/dashboard/ActivityLog";
 import ActiveAlerts from "../components/dashboard/ActiveAlerts";
+import { useAuth } from "../context/AuthContext";
 
 function Dashboard() {
+    const {
+  user,
+  isAuthenticated,
+  isAuthLoading,
+} = useAuth();
+
+console.log("[AUTH CONTEXT]", {
+  user,
+  isAuthenticated,
+  isAuthLoading,
+});
+
   return (
     <section className="command-center">
       <div className="page-heading">
