@@ -1,0 +1,327 @@
+/* =========================================
+   SITE-19 SCP ADMIN MANAGEMENT
+========================================= */
+
+.scp-admin-panel {
+  padding: 20px;
+  border: 1px solid #3e4b43;
+  background: #111512;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.scp-admin-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.scp-admin-panel__header p {
+  margin-bottom: 6px;
+
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+
+  color: #7e8981;
+}
+
+.scp-admin-panel__header h3 {
+  margin-bottom: 8px;
+
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+}
+
+.scp-admin-panel__header span {
+  font-size: 0.7rem;
+  color: #9ab0a1;
+}
+
+
+/* =========================================
+   GENERAL ADMIN BUTTONS
+========================================= */
+
+.scp-admin-button,
+.scp-admin-panel button,
+.scp-card__admin-button {
+  box-sizing: border-box;
+
+  padding: 11px 14px;
+
+  border: 1px solid #3e4b43;
+
+  background: transparent;
+  color: #aeb8b0;
+
+  font-family: inherit;
+  font-size: 0.7rem;
+
+  cursor: pointer;
+}
+
+.scp-admin-button:hover,
+.scp-admin-panel button:hover,
+.scp-card__admin-button:hover {
+  background: #151a16;
+  color: #e8eee9;
+}
+
+.scp-admin-panel button:disabled,
+.scp-card__admin-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   MESSAGES
+========================================= */
+
+.scp-admin-message {
+  padding: 12px;
+
+  border: 1px solid #3e4b43;
+
+  font-size: 0.75rem;
+}
+
+.scp-admin-message--success {
+  border-color: #4f6b58;
+  color: #9ab0a1;
+}
+
+.scp-admin-message--error {
+  border-color: #6b4545;
+  color: #c48181;
+}
+
+
+/* =========================================
+   CREATE / EDIT FORM
+========================================= */
+
+.scp-admin-form {
+  padding-top: 20px;
+
+  border-top: 1px solid #2f3833;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 16px;
+}
+
+.scp-admin-form__heading {
+  grid-column: 1 / -1;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 15px;
+
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid #2f3833;
+}
+
+.scp-admin-form__heading strong {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+}
+
+.scp-admin-form label {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+
+  color: #8f9992;
+}
+
+.scp-admin-form input,
+.scp-admin-form select,
+.scp-admin-form textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 12px;
+
+  border: 1px solid #2f3833;
+
+  outline: none;
+
+  background: #0b0d0c;
+  color: #d8dedb;
+
+  font-family: inherit;
+}
+
+.scp-admin-form textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.scp-admin-form input:focus,
+.scp-admin-form select:focus,
+.scp-admin-form textarea:focus {
+  border-color: #58675d;
+}
+
+.scp-admin-form input:disabled,
+.scp-admin-form select:disabled,
+.scp-admin-form textarea:disabled {
+  opacity: 0.55;
+}
+
+.scp-admin-form__wide {
+  grid-column: 1 / -1;
+}
+
+.scp-admin-form__actions {
+  grid-column: 1 / -1;
+
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 10px;
+}
+
+
+/* =========================================
+   DELETE CONFIRMATION
+========================================= */
+
+.scp-delete-confirm {
+  padding: 20px;
+
+  border: 1px solid #5d4141;
+
+  background: #171211;
+}
+
+.scp-delete-confirm p {
+  margin-bottom: 8px;
+
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+
+  color: #b97878;
+}
+
+.scp-delete-confirm h3 {
+  margin-bottom: 10px;
+}
+
+.scp-delete-confirm span {
+  display: block;
+
+  color: #9b8585;
+
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.scp-delete-confirm__actions {
+  margin-top: 20px;
+
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 10px;
+}
+
+
+/* =========================================
+   DANGER BUTTONS
+========================================= */
+
+.scp-admin-button--danger,
+.scp-card__admin-button--danger {
+  border-color: #6b4545 !important;
+  color: #b97878 !important;
+}
+
+.scp-admin-button--danger:hover,
+.scp-card__admin-button--danger:hover {
+  background: #211616 !important;
+}
+
+
+/* =========================================
+   SCP CARD ACTIONS
+========================================= */
+
+.scp-card__actions {
+  margin-top: auto;
+
+  display: grid;
+
+  gap: 8px;
+}
+
+
+/*
+ * EDIT RECORD uses React Router <Link>,
+ * which becomes an <a> element.
+ *
+ * These rules make the link behave
+ * visually like a real button.
+ */
+.scp-card__admin-button {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 42px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+  text-decoration: none;
+
+  letter-spacing: 0.04em;
+}
+
+
+/*
+ * DELETE is an actual <button>.
+ * Keep its dimensions consistent
+ * with the EDIT link.
+ */
+button.scp-card__admin-button {
+  min-height: 42px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 800px) {
+  .scp-admin-panel__header {
+    flex-direction: column;
+  }
+
+  .scp-admin-form {
+    grid-template-columns: 1fr;
+  }
+
+  .scp-admin-form__heading,
+  .scp-admin-form__wide,
+  .scp-admin-form__actions {
+    grid-column: 1;
+  }
+}

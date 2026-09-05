@@ -1,31 +1,54 @@
-import { Routes, Route } from "react-router-dom";
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
 
 import MainLayout from "./components/layout/MainLayout";
+
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
+import AccountGate from "./components/auth/AccountGate.jsx";
+import AdminRoute from "./components/auth/adminRoute.jsx";
 
 import Dashboard from "./pages/Dashboard";
 import Database from "./pages/Database";
+import SCPFile from "./pages/SCPFile.jsx";
+import EditSCP from "./pages/EditSCP.jsx";
+
 import Personnel from "./pages/Personnel";
 import Facilities from "./pages/Facilities";
 import Incidents from "./pages/Incidents";
 import Terminal from "./pages/Terminal";
-import SCPFile from "./pages/SCPFile.jsx";
+
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
-import AccountGate from "./components/auth/AccountGate.jsx";
+
 import PendingAccess from "./pages/PendingAccess.jsx";
 import AccessDenied from "./pages/AccessDenied.jsx";
+
 import Admin from "./pages/Admin.jsx";
-import AdminRoute from "./components/auth/adminRoute.jsx";
 
 function App() {
   return (
     <Routes>
-      {/* PUBLIC AUTH ROUTES */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
 
-      {/* PROTECTED SITE-19 ROUTES */}
+      {/* =========================
+          PUBLIC AUTH ROUTES
+      ========================= */}
+
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
+      <Route
+        path="/register"
+        element={<Register />}
+      />
+
+      {/* =========================
+          COMMAND CENTER
+      ========================= */}
+
       <Route
         path="/"
         element={
@@ -38,6 +61,10 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      {/* =========================
+          SCP DATABASE
+      ========================= */}
 
       <Route
         path="/database"
@@ -52,6 +79,8 @@ function App() {
         }
       />
 
+      {/* SCP DETAIL */}
+
       <Route
         path="/database/:scpId"
         element={
@@ -64,6 +93,27 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      {/* SCP EDIT — ADMIN ONLY */}
+
+      <Route
+        path="/database/:scpId/edit"
+        element={
+          <ProtectedRoute>
+            <AccountGate>
+              <AdminRoute>
+                <MainLayout>
+                  <EditSCP />
+                </MainLayout>
+              </AdminRoute>
+            </AccountGate>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* =========================
+          SITE-19 OPERATIONS
+      ========================= */}
 
       <Route
         path="/personnel"
@@ -117,7 +167,10 @@ function App() {
         }
       />
 
-      {/* ACCOUNT STATUS ROUTES */}
+      {/* =========================
+          ACCOUNT STATUS
+      ========================= */}
+
       <Route
         path="/pending"
         element={
@@ -136,21 +189,25 @@ function App() {
         }
       />
 
-      {/* ADMIN ROUTES */}
+      {/* =========================
+          ADMIN CONTROL
+      ========================= */}
+
       <Route
-        path="/admin"
-        element={
-          <ProtectedRoute>
-            <AdminRoute>
-              <AccountGate>
-                <MainLayout>
-                  <Admin />
-                </MainLayout>
-              </AccountGate>
-            </AdminRoute>
-          </ProtectedRoute>
-        }
-      />
+  path="/database/:scpId/edit"
+  element={
+    <ProtectedRoute>
+      <AccountGate>
+        <AdminRoute>
+          <MainLayout>
+            <EditSCP />
+          </MainLayout>
+        </AdminRoute>
+      </AccountGate>
+    </ProtectedRoute>
+  }
+/>
+
     </Routes>
   );
 }

@@ -11,7 +11,7 @@ import { useAuth } from "../context/AuthContext";
 
 import "../styles/scpManagement.css";
 
-const EMPTY_SCP_FORM = {
+const BASE_FORM = {
   id: "",
   name: "",
   description: "",
@@ -24,8 +24,7 @@ const EMPTY_SCP_FORM = {
 function Database() {
   const { profile } = useAuth();
 
-  const [scpData, setScpData] =
-    useState([]);
+  const [scpData, setScpData] = useState([]);
 
   const [searchTerm, setSearchTerm] =
     useState("");
@@ -40,23 +39,16 @@ function Database() {
     useState("");
 
   /*
-   * CREATE remains on Database.
-   *
-   * EDIT does NOT.
+   * CRUD UI state
    */
-  const [isCreateOpen, setIsCreateOpen] =
-    useState(false);
+  const [editorMode, setEditorMode] =
+    useState(null);
 
-  const [createForm, setCreateForm] =
-    useState(EMPTY_SCP_FORM);
+  const [activeRecord, setActiveRecord] =
+    useState(null);
 
-  /*
-   * DELETE confirmation remains here.
-   */
-  const [
-    deleteRecord,
-    setDeleteRecord,
-  ] = useState(null);
+  const [formData, setFormData] =
+    useState(BASE_FORM);
 
   const [isMutating, setIsMutating] =
     useState(false);
@@ -66,30 +58,32 @@ function Database() {
     setMutationMessage,
   ] = useState(null);
 
-  const databaseRequestRef =
+  /*
+   * Prevent stale database responses
+   * from overwriting newer results.
+   */
+  const databaseRequestIdRef =
     useRef(0);
 
   const isAdmin =
     profile?.role === "ADMIN" &&
     profile?.accountStatus === "ACTIVE";
 
-  const adminClearance =
-    Number(
-      profile?.clearanceLevel ?? 0
-    );
+  const adminClearance = Number(
+    profile?.clearanceLevel ?? 0
+  );
 
   const clearanceOptions =
     Array.from(
       {
-        length:
-          adminClearance + 1,
+        length: adminClearance + 1,
       },
       (_, index) => index
     );
 
-  function getEmptyCreateForm() {
+  function createEmptyForm() {
     return {
-      ...EMPTY_SCP_FORM,
+      ...BASE_FORM,
 
       clearanceLevel:
         adminClearance >= 1
@@ -100,26 +94,24 @@ function Database() {
 
   async function loadSCPs() {
     const requestId =
-      ++databaseRequestRef.current;
+      ++databaseRequestIdRef.current;
 
     setIsLoading(true);
     setErrorMessage("");
 
-    const {
-      data,
-      error,
-    } = await scpService.getAll();
+    const { data, error } =
+      await scpService.getAll();
 
     /*
-     * Ignore stale database
-     * responses.
+     * Ignore responses from older
+     * requests.
      */
     if (
       requestId !==
-      databaseRequestRef.current
+      databaseRequestIdRef.current
     ) {
       console.log(
-        `[DATABASE] STALE RESPONSE IGNORED: ${requestId}`
+        `[DATABASE] Ignoring stale request ${requestId}`
       );
 
       return;
@@ -127,7 +119,10 @@ function Database() {
 
     if (error) {
       console.error(
-        "[DATABASE][LOAD]",
+        `[DATABASE][${
+          error?.requestId ??
+          "UNKNOWN"
+        }]`,
         error
       );
 
@@ -136,15 +131,9 @@ function Database() {
       setErrorMessage(
         "DATABASE CONNECTION FAILURE"
       );
-
-      setIsLoading(false);
-
-      return;
+    } else {
+      setScpData(data ?? []);
     }
-
-    setScpData(
-      data ?? []
-    );
 
     setIsLoading(false);
   }
@@ -153,30 +142,69 @@ function Database() {
     loadSCPs();
 
     return () => {
-      databaseRequestRef.current += 1;
+      databaseRequestIdRef.current += 1;
     };
   }, []);
 
   function openCreate() {
-    setCreateForm(
-      getEmptyCreateForm()
+    setActiveRecord(null);
+
+    setFormData(
+      createEmptyForm()
     );
 
-    setDeleteRecord(null);
     setMutationMessage(null);
 
-    setIsCreateOpen(true);
+    setEditorMode("create");
   }
 
-  function closeCreate() {
-    setCreateForm(
-      getEmptyCreateForm()
+  function openEdit(scp) {
+    setActiveRecord(scp);
+
+    setFormData({
+      id: scp.id,
+      name: scp.name,
+      description:
+        scp.description ?? "",
+
+      objectClass:
+        scp.objectClass,
+
+      threatLevel:
+        scp.threatLevel,
+
+      status:
+        scp.status,
+
+      clearanceLevel:
+        Number(
+          scp.clearanceLevel
+        ),
+    });
+
+    setMutationMessage(null);
+
+    setEditorMode("edit");
+  }
+
+  function openDelete(scp) {
+    setActiveRecord(scp);
+
+    setMutationMessage(null);
+
+    setEditorMode("delete");
+  }
+
+  function closeEditor() {
+    setEditorMode(null);
+    setActiveRecord(null);
+
+    setFormData(
+      createEmptyForm()
     );
-
-    setIsCreateOpen(false);
   }
 
-  function handleCreateChange(
+  function handleFormChange(
     event
   ) {
     const {
@@ -184,7 +212,7 @@ function Database() {
       value,
     } = event.target;
 
-    setCreateForm(
+    setFormData(
       (current) => ({
         ...current,
 
@@ -197,16 +225,16 @@ function Database() {
     );
   }
 
-  function validateCreate() {
-    const id =
-      createForm.id
+  function validateForm() {
+    const normalizedId =
+      formData.id
         .trim()
         .toUpperCase();
 
     if (
-      !id ||
-      !createForm.name.trim() ||
-      !createForm.description.trim()
+      !normalizedId ||
+      !formData.name.trim() ||
+      !formData.description.trim()
     ) {
       return {
         valid: false,
@@ -218,7 +246,7 @@ function Database() {
 
     if (
       !/^SCP-[A-Z0-9-]+$/.test(
-        id
+        normalizedId
       )
     ) {
       return {
@@ -229,46 +257,61 @@ function Database() {
       };
     }
 
-    const clearance =
-      Number(
-        createForm.clearanceLevel
-      );
-
     if (
-      clearance < 0 ||
-      clearance > adminClearance
+      Number(
+        formData.clearanceLevel
+      ) > adminClearance
     ) {
       return {
         valid: false,
 
         message:
-          "CLEARANCE EXCEEDS ADMIN AUTHORIZATION.",
+          "CLEARANCE EXCEEDS CURRENT ADMIN AUTHORIZATION.",
+      };
+    }
+
+    if (
+      Number(
+        formData.clearanceLevel
+      ) < 0
+    ) {
+      return {
+        valid: false,
+
+        message:
+          "INVALID CLEARANCE LEVEL.",
       };
     }
 
     return {
       valid: true,
-      id,
+      normalizedId,
     };
   }
 
-  async function handleCreate(
+  async function handleSave(
     event
   ) {
     event.preventDefault();
 
     if (!isAdmin) {
+      setMutationMessage({
+        type: "error",
+
+        text:
+          "ADMIN AUTHORIZATION REQUIRED.",
+      });
+
       return;
     }
 
     const validation =
-      validateCreate();
+      validateForm();
 
     if (!validation.valid) {
       setMutationMessage({
         type: "error",
-        text:
-          validation.message,
+        text: validation.message,
       });
 
       return;
@@ -277,46 +320,64 @@ function Database() {
     setIsMutating(true);
     setMutationMessage(null);
 
-    const {
-      data,
-      error,
-    } = await scpService.create({
-      id:
-        validation.id,
-
+    const payload = {
       name:
-        createForm.name.trim(),
+        formData.name.trim(),
 
       description:
-        createForm.description.trim(),
+        formData.description.trim(),
 
       objectClass:
-        createForm.objectClass,
+        formData.objectClass,
 
       threatLevel:
-        createForm.threatLevel,
+        formData.threatLevel,
 
       status:
-        createForm.status,
+        formData.status,
 
       clearanceLevel:
         Number(
-          createForm.clearanceLevel
+          formData.clearanceLevel
         ),
-    });
+    };
 
-    if (error) {
+    let result;
+
+    if (
+      editorMode === "create"
+    ) {
+      result =
+        await scpService.create({
+          id:
+            validation.normalizedId,
+
+          ...payload,
+        });
+    } else {
+      result =
+        await scpService.update(
+          activeRecord.id,
+          payload
+        );
+    }
+
+    if (result.error) {
       console.error(
-        "[SCP CRUD][CREATE]",
-        error
+        `[SCP CRUD][${
+          editorMode === "create"
+            ? "CREATE"
+            : "UPDATE"
+        }]`,
+        result.error
       );
 
       setMutationMessage({
         type: "error",
 
         text:
-          error?.message ??
-          "SCP CREATION FAILED.",
+          result.error?.message ??
+          "SCP DATABASE WRITE FAILED.",
       });
 
       setIsMutating(false);
@@ -324,40 +385,29 @@ function Database() {
       return;
     }
 
-    await loadSCPs();
-
-    setIsCreateOpen(false);
-
-    setCreateForm(
-      getEmptyCreateForm()
-    );
+    const operation =
+      editorMode === "create"
+        ? "CREATED"
+        : "UPDATED";
 
     setMutationMessage({
       type: "success",
 
       text:
-        `${data.id} CREATED SUCCESSFULLY.`,
+        `${result.data.id} ${operation} SUCCESSFULLY.`,
     });
 
+    await loadSCPs();
+
+    closeEditor();
+
     setIsMutating(false);
-  }
-
-  function openDelete(scp) {
-    setIsCreateOpen(false);
-
-    setDeleteRecord(scp);
-
-    setMutationMessage(null);
-  }
-
-  function cancelDelete() {
-    setDeleteRecord(null);
   }
 
   async function handleDelete() {
     if (
       !isAdmin ||
-      !deleteRecord
+      !activeRecord
     ) {
       return;
     }
@@ -365,14 +415,10 @@ function Database() {
     setIsMutating(true);
     setMutationMessage(null);
 
-    const recordId =
-      deleteRecord.id;
-
-    const {
-      error,
-    } = await scpService.delete(
-      recordId
-    );
+    const { data, error } =
+      await scpService.delete(
+        activeRecord.id
+      );
 
     if (error) {
       console.error(
@@ -385,7 +431,7 @@ function Database() {
 
         text:
           error?.message ??
-          "SCP DELETION FAILED.",
+          "SCP RECORD DELETION FAILED.",
       });
 
       setIsMutating(false);
@@ -393,52 +439,52 @@ function Database() {
       return;
     }
 
-    setDeleteRecord(null);
-
-    await loadSCPs();
-
     setMutationMessage({
       type: "success",
 
       text:
-        `${recordId} DELETED SUCCESSFULLY.`,
+        `${
+          data?.id ??
+          activeRecord.id
+        } DELETED SUCCESSFULLY.`,
     });
+
+    await loadSCPs();
+
+    closeEditor();
 
     setIsMutating(false);
   }
 
   const filteredSCPs =
     scpData.filter((scp) => {
-      const id =
+      const scpId =
         scp?.id ?? "";
 
-      const name =
+      const scpName =
         scp?.name ?? "";
 
-      const objectClass =
+      const scpClass =
         scp?.objectClass ?? "";
 
       const term =
-        searchTerm
-          .trim()
-          .toLowerCase();
+        searchTerm.toLowerCase();
 
       const matchesSearch =
-        id
+        scpId
           .toLowerCase()
           .includes(term) ||
-        name
+        scpName
           .toLowerCase()
           .includes(term) ||
-        objectClass
+        scpClass
           .toLowerCase()
           .includes(term);
 
       const matchesClass =
-        selectedClass ===
-          "ALL" ||
-        objectClass.toUpperCase() ===
-          selectedClass;
+        selectedClass === "ALL" ||
+        scpClass.toUpperCase() ===
+          selectedClass.toUpperCase();
 
       return (
         matchesSearch &&
@@ -449,12 +495,7 @@ function Database() {
   return (
     <section className="scp-database">
 
-      {/* =========================
-          PAGE HEADER
-      ========================= */}
-
       <div className="page-heading">
-
         <div>
           <p className="page-heading__eyebrow">
             SITE-19 // CLASSIFIED ARCHIVES
@@ -480,18 +521,16 @@ function Database() {
               ? "● DATABASE OFFLINE"
               : "● DATABASE ONLINE"}
         </span>
-
       </div>
 
-      {/* =========================
-          ADMIN MANAGEMENT HEADER
-      ========================= */}
+      {/* ======================
+          ADMIN CRUD CONTROL
+      ====================== */}
 
       {isAdmin && (
         <section className="scp-admin-panel">
 
           <div className="scp-admin-panel__header">
-
             <div>
               <p>
                 SITE-19 // DATABASE AUTHORITY
@@ -507,17 +546,15 @@ function Database() {
               </span>
             </div>
 
-            {!isCreateOpen &&
-              !deleteRecord && (
-                <button
-                  type="button"
-                  className="scp-admin-button"
-                  onClick={openCreate}
-                >
-                  + CREATE SCP RECORD
-                </button>
-              )}
-
+            {!editorMode && (
+              <button
+                type="button"
+                className="scp-admin-button"
+                onClick={openCreate}
+              >
+                + CREATE SCP RECORD
+              </button>
+            )}
           </div>
 
           {mutationMessage && (
@@ -528,36 +565,36 @@ function Database() {
             </div>
           )}
 
-          {/* =====================
-              CREATE ONLY
-          ===================== */}
-
-          {isCreateOpen && (
+          {(editorMode ===
+            "create" ||
+            editorMode ===
+              "edit") && (
             <form
               className="scp-admin-form"
               onSubmit={
-                handleCreate
+                handleSave
               }
             >
-
               <div className="scp-admin-form__heading">
 
                 <strong>
-                  NEW CLASSIFIED RECORD
+                  {editorMode ===
+                  "create"
+                    ? "NEW CLASSIFIED RECORD"
+                    : `EDITING ${activeRecord?.id}`}
                 </strong>
 
                 <button
                   type="button"
+                  onClick={
+                    closeEditor
+                  }
                   disabled={
                     isMutating
-                  }
-                  onClick={
-                    closeCreate
                   }
                 >
                   CANCEL
                 </button>
-
               </div>
 
               <label>
@@ -568,13 +605,15 @@ function Database() {
                   type="text"
                   placeholder="SCP-999"
                   value={
-                    createForm.id
+                    formData.id
                   }
                   disabled={
+                    editorMode ===
+                      "edit" ||
                     isMutating
                   }
                   onChange={
-                    handleCreateChange
+                    handleFormChange
                   }
                 />
               </label>
@@ -587,13 +626,13 @@ function Database() {
                   type="text"
                   placeholder="OBJECT DESIGNATION"
                   value={
-                    createForm.name
+                    formData.name
                   }
                   disabled={
                     isMutating
                   }
                   onChange={
-                    handleCreateChange
+                    handleFormChange
                   }
                 />
               </label>
@@ -604,13 +643,13 @@ function Database() {
                 <select
                   name="objectClass"
                   value={
-                    createForm.objectClass
+                    formData.objectClass
                   }
                   disabled={
                     isMutating
                   }
                   onChange={
-                    handleCreateChange
+                    handleFormChange
                   }
                 >
                   <option value="SAFE">
@@ -633,13 +672,13 @@ function Database() {
                 <select
                   name="threatLevel"
                   value={
-                    createForm.threatLevel
+                    formData.threatLevel
                   }
                   disabled={
                     isMutating
                   }
                   onChange={
-                    handleCreateChange
+                    handleFormChange
                   }
                 >
                   <option value="LOW">
@@ -666,13 +705,13 @@ function Database() {
                 <select
                   name="status"
                   value={
-                    createForm.status
+                    formData.status
                   }
                   disabled={
                     isMutating
                   }
                   onChange={
-                    handleCreateChange
+                    handleFormChange
                   }
                 >
                   <option value="CONTAINED">
@@ -699,13 +738,13 @@ function Database() {
                 <select
                   name="clearanceLevel"
                   value={
-                    createForm.clearanceLevel
+                    formData.clearanceLevel
                   }
                   disabled={
                     isMutating
                   }
                   onChange={
-                    handleCreateChange
+                    handleFormChange
                   }
                 >
                   {clearanceOptions.map(
@@ -731,16 +770,16 @@ function Database() {
 
                 <textarea
                   name="description"
-                  rows="7"
+                  rows="6"
                   placeholder="ENTER CLASSIFIED SCP DESCRIPTION..."
                   value={
-                    createForm.description
+                    formData.description
                   }
                   disabled={
                     isMutating
                   }
                   onChange={
-                    handleCreateChange
+                    handleFormChange
                   }
                 />
               </label>
@@ -749,11 +788,11 @@ function Database() {
 
                 <button
                   type="button"
+                  onClick={
+                    closeEditor
+                  }
                   disabled={
                     isMutating
-                  }
-                  onClick={
-                    closeCreate
                   }
                 >
                   CANCEL
@@ -767,76 +806,75 @@ function Database() {
                 >
                   {isMutating
                     ? "TRANSMITTING..."
-                    : "CREATE RECORD"}
+                    : editorMode ===
+                        "create"
+                      ? "CREATE RECORD"
+                      : "SAVE RECORD"}
                 </button>
 
               </div>
-
             </form>
           )}
 
-          {/* =====================
-              DELETE ONLY
-          ===================== */}
+          {editorMode ===
+            "delete" &&
+            activeRecord && (
+              <div className="scp-delete-confirm">
 
-          {deleteRecord && (
-            <div className="scp-delete-confirm">
+                <p>
+                  DATABASE DELETION AUTHORIZATION
+                </p>
 
-              <p>
-                DATABASE DELETION AUTHORIZATION
-              </p>
+                <h3>
+                  DELETE{" "}
+                  {activeRecord.id}?
+                </h3>
 
-              <h3>
-                DELETE{" "}
-                {deleteRecord.id}?
-              </h3>
+                <span>
+                  This operation will
+                  permanently remove the
+                  selected SCP record.
+                </span>
 
-              <span>
-                This operation will
-                permanently remove the
-                selected SCP record.
-              </span>
+                <div className="scp-delete-confirm__actions">
 
-              <div className="scp-delete-confirm__actions">
+                  <button
+                    type="button"
+                    onClick={
+                      closeEditor
+                    }
+                    disabled={
+                      isMutating
+                    }
+                  >
+                    ABORT
+                  </button>
 
-                <button
-                  type="button"
-                  disabled={
-                    isMutating
-                  }
-                  onClick={
-                    cancelDelete
-                  }
-                >
-                  ABORT
-                </button>
+                  <button
+                    type="button"
+                    className="scp-admin-button--danger"
+                    onClick={
+                      handleDelete
+                    }
+                    disabled={
+                      isMutating
+                    }
+                  >
+                    {isMutating
+                      ? "DELETING..."
+                      : "CONFIRM DELETE"}
+                  </button>
 
-                <button
-                  type="button"
-                  className="scp-admin-button--danger"
-                  disabled={
-                    isMutating
-                  }
-                  onClick={
-                    handleDelete
-                  }
-                >
-                  {isMutating
-                    ? "DELETING..."
-                    : "CONFIRM DELETE"}
-                </button>
-
+                </div>
               </div>
-
-            </div>
-          )}
+            )}
 
         </section>
       )}
 
-      {/* =========================
-          SEARCH
-      ========================= */}
+      {/* ======================
+          SEARCH / FILTER
+      ====================== */}
 
       <div className="database-controls">
 
@@ -882,9 +920,9 @@ function Database() {
 
       </div>
 
-      {/* =========================
-          RECORDS
-      ========================= */}
+      {/* ======================
+          DATABASE RECORDS
+      ====================== */}
 
       <div className="scp-grid">
 
@@ -913,14 +951,16 @@ function Database() {
               <p>
                 Unable to retrieve
                 containment records.
+                Check the Foundation
+                data connection.
               </p>
 
               <button
                 type="button"
-                className="database-retry"
                 onClick={
                   loadSCPs
                 }
+                className="database-retry"
               >
                 RETRY CONNECTION
               </button>
@@ -933,10 +973,9 @@ function Database() {
           filteredSCPs.map(
             (scp) => (
               <article
-                key={scp.id}
                 className="scp-card"
+                key={scp.id}
               >
-
                 <div className="scp-card__header">
 
                   <span>
@@ -981,8 +1020,9 @@ function Database() {
                   </span>
 
                   <span>
-                    CLEARANCE:{" "}
+                    CLEARANCE:
                     <strong>
+                      {" "}
                       LEVEL{" "}
                       {
                         scp.clearanceLevel
@@ -1003,20 +1043,17 @@ function Database() {
 
                   {isAdmin && (
                     <>
-                      {/*
-                        IMPORTANT:
-
-                        EDIT performs navigation.
-
-                        There is NO openEdit()
-                        function anymore.
-                      */}
-                      <Link
-                        to={`/database/${scp.id}/edit`}
+                      <button
+                        type="button"
                         className="scp-card__admin-button"
+                        onClick={() =>
+                          openEdit(
+                            scp
+                          )
+                        }
                       >
                         EDIT RECORD
-                      </Link>
+                      </button>
 
                       <button
                         type="button"
@@ -1046,8 +1083,8 @@ function Database() {
           0 && (
           <div className="database-empty">
             NO RECORDS AVAILABLE
-            WITHIN CURRENT CLEARANCE
-            PARAMETERS.
+            WITHIN CURRENT SEARCH OR
+            CLEARANCE PARAMETERS.
           </div>
         )}
 
