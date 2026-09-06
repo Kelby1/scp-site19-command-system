@@ -79,22 +79,10 @@ function App() {
         }
       />
 
-      {/* SCP DETAIL */}
-
-      <Route
-        path="/database/:scpId"
-        element={
-          <ProtectedRoute>
-            <AccountGate>
-              <MainLayout>
-                <SCPFile />
-              </MainLayout>
-            </AccountGate>
-          </ProtectedRoute>
-        }
-      />
-
-      {/* SCP EDIT — ADMIN ONLY */}
+      {/* =========================
+          SCP EDIT
+          ADMIN ONLY
+      ========================= */}
 
       <Route
         path="/database/:scpId/edit"
@@ -112,7 +100,24 @@ function App() {
       />
 
       {/* =========================
-          SITE-19 OPERATIONS
+          SCP CLASSIFIED FILE
+      ========================= */}
+
+      <Route
+        path="/database/:scpId"
+        element={
+          <ProtectedRoute>
+            <AccountGate>
+              <MainLayout>
+                <SCPFile />
+              </MainLayout>
+            </AccountGate>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* =========================
+          PERSONNEL
       ========================= */}
 
       <Route
@@ -128,6 +133,10 @@ function App() {
         }
       />
 
+      {/* =========================
+          FACILITIES
+      ========================= */}
+
       <Route
         path="/facilities"
         element={
@@ -141,6 +150,10 @@ function App() {
         }
       />
 
+      {/* =========================
+          INCIDENTS
+      ========================= */}
+
       <Route
         path="/incidents"
         element={
@@ -153,6 +166,10 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      {/* =========================
+          SYSTEM TERMINAL
+      ========================= */}
 
       <Route
         path="/terminal"
@@ -194,19 +211,19 @@ function App() {
       ========================= */}
 
       <Route
-  path="/database/:scpId/edit"
-  element={
-    <ProtectedRoute>
-      <AccountGate>
-        <AdminRoute>
-          <MainLayout>
-            <EditSCP />
-          </MainLayout>
-        </AdminRoute>
-      </AccountGate>
-    </ProtectedRoute>
-  }
-/>
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AccountGate>
+              <AdminRoute>
+                <MainLayout>
+                  <Admin />
+                </MainLayout>
+              </AdminRoute>
+            </AccountGate>
+          </ProtectedRoute>
+        }
+      />
 
     </Routes>
   );
