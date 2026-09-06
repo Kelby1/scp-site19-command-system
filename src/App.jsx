@@ -10,8 +10,10 @@ import AccountGate from "./components/auth/AccountGate.jsx";
 import AdminRoute from "./components/auth/adminRoute.jsx";
 
 import Dashboard from "./pages/Dashboard";
+
 import Database from "./pages/Database";
 import SCPFile from "./pages/SCPFile.jsx";
+import CreateSCP from "./pages/CreateSCP.jsx";
 import EditSCP from "./pages/EditSCP.jsx";
 
 import Personnel from "./pages/Personnel";
@@ -32,7 +34,7 @@ function App() {
     <Routes>
 
       {/* =========================
-          PUBLIC AUTH ROUTES
+          PUBLIC AUTH
       ========================= */}
 
       <Route
@@ -80,7 +82,27 @@ function App() {
       />
 
       {/* =========================
-          SCP EDIT
+          CREATE SCP
+          ADMIN ONLY
+      ========================= */}
+
+      <Route
+        path="/database/create"
+        element={
+          <ProtectedRoute>
+            <AccountGate>
+              <AdminRoute>
+                <MainLayout>
+                  <CreateSCP />
+                </MainLayout>
+              </AdminRoute>
+            </AccountGate>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* =========================
+          EDIT SCP
           ADMIN ONLY
       ========================= */}
 
@@ -100,7 +122,7 @@ function App() {
       />
 
       {/* =========================
-          SCP CLASSIFIED FILE
+          SCP FILE
       ========================= */}
 
       <Route
@@ -168,7 +190,7 @@ function App() {
       />
 
       {/* =========================
-          SYSTEM TERMINAL
+          TERMINAL
       ========================= */}
 
       <Route

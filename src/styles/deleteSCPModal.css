@@ -1,0 +1,547 @@
+/* =========================================
+   SITE-19 RECORD TERMINATION MODAL
+========================================= */
+
+.scp-delete-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+
+  display: grid;
+  place-items: center;
+
+  padding: 24px;
+
+  background:
+    rgba(2, 4, 3, 0.86);
+
+  backdrop-filter:
+    blur(7px);
+
+  animation:
+    scp-delete-backdrop-in
+    160ms ease-out;
+}
+
+
+/* =========================================
+   PANEL
+========================================= */
+
+.scp-delete-modal__panel {
+  position: relative;
+
+  width: min(
+    640px,
+    100%
+  );
+
+  max-height: 90vh;
+  overflow-y: auto;
+
+  border:
+    1px solid #714747;
+
+  background:
+    #101312;
+
+  box-shadow:
+    0 24px 80px
+    rgba(0, 0, 0, 0.7);
+
+  animation:
+    scp-delete-panel-in
+    180ms ease-out;
+}
+
+
+/*
+ * Red security line across
+ * the top of the termination panel.
+ */
+.scp-delete-modal__panel::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 2px;
+
+  background:
+    #9f5656;
+}
+
+
+/* =========================================
+   SECURITY STRIP
+========================================= */
+
+.scp-delete-modal__security-strip {
+  padding:
+    12px 20px;
+
+  border-bottom:
+    1px solid #342828;
+
+  background:
+    #181111;
+
+  color:
+    #bf7676;
+
+  font-size:
+    0.65rem;
+
+  letter-spacing:
+    0.18em;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.scp-delete-modal__header {
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-start;
+
+  gap: 20px;
+
+  padding:
+    24px 24px 20px;
+}
+
+.scp-delete-modal__header p {
+  margin:
+    0 0 8px;
+
+  color:
+    #847b7b;
+
+  font-size:
+    0.65rem;
+
+  letter-spacing:
+    0.14em;
+}
+
+.scp-delete-modal__header h2 {
+  margin: 0;
+
+  color:
+    #e5dddd;
+
+  font-size:
+    1.15rem;
+
+  letter-spacing:
+    0.08em;
+}
+
+.scp-delete-modal__warning {
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  width: 44px;
+  height: 44px;
+
+  border:
+    1px solid #714747;
+
+  color:
+    #c47575;
+
+  font-size:
+    1.25rem;
+}
+
+
+/* =========================================
+   WARNING MESSAGE
+========================================= */
+
+.scp-delete-modal__alert {
+  margin:
+    0 24px;
+
+  padding:
+    15px 16px;
+
+  border:
+    1px solid #523838;
+
+  background:
+    #171111;
+}
+
+.scp-delete-modal__alert strong {
+  display: block;
+
+  margin-bottom:
+    6px;
+
+  color:
+    #c97979;
+
+  font-size:
+    0.72rem;
+
+  letter-spacing:
+    0.1em;
+}
+
+.scp-delete-modal__alert p {
+  margin: 0;
+
+  color:
+    #9b8b8b;
+
+  font-size:
+    0.72rem;
+
+  line-height:
+    1.6;
+}
+
+
+/* =========================================
+   RECORD INFORMATION
+========================================= */
+
+.scp-delete-modal__record {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    1px;
+
+  margin:
+    22px 24px;
+
+  border:
+    1px solid #303633;
+
+  background:
+    #303633;
+}
+
+.scp-delete-modal__record > div {
+  padding:
+    14px 15px;
+
+  background:
+    #0b0e0c;
+}
+
+.scp-delete-modal__record span {
+  display: block;
+
+  margin-bottom:
+    6px;
+
+  color:
+    #707a74;
+
+  font-size:
+    0.62rem;
+
+  letter-spacing:
+    0.12em;
+}
+
+.scp-delete-modal__record strong {
+  color:
+    #cbd2cd;
+
+  font-size:
+    0.76rem;
+}
+
+.scp-delete-modal__danger-text {
+  color:
+    #bd6c6c !important;
+}
+
+
+/* =========================================
+   CONFIRMATION
+========================================= */
+
+.scp-delete-modal__confirmation {
+  padding:
+    0 24px 24px;
+}
+
+.scp-delete-modal__confirmation label {
+  display: block;
+
+  margin-bottom:
+    10px;
+
+  color:
+    #9ba49e;
+
+  font-size:
+    0.68rem;
+
+  letter-spacing:
+    0.08em;
+}
+
+.scp-delete-modal__confirmation label strong {
+  color:
+    #d1d8d3;
+}
+
+.scp-delete-modal__confirmation input {
+  box-sizing:
+    border-box;
+
+  width: 100%;
+
+  padding:
+    13px 14px;
+
+  border:
+    1px solid #4b3939;
+
+  outline:
+    none;
+
+  background:
+    #090b0a;
+
+  color:
+    #e0e4e1;
+
+  font-family:
+    inherit;
+
+  letter-spacing:
+    0.08em;
+}
+
+.scp-delete-modal__confirmation input:focus {
+  border-color:
+    #845252;
+
+  box-shadow:
+    0 0 0 1px
+    #845252;
+}
+
+.scp-delete-modal__verification {
+  margin-top:
+    8px;
+
+  color:
+    #776d6d;
+
+  font-size:
+    0.62rem;
+
+  letter-spacing:
+    0.1em;
+}
+
+.scp-delete-modal__verification--confirmed {
+  color:
+    #8da596;
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+.scp-delete-modal__error {
+  margin:
+    0 24px 20px;
+
+  padding:
+    12px 14px;
+
+  border:
+    1px solid #683f3f;
+
+  background:
+    #1b1111;
+
+  color:
+    #ca7777;
+
+  font-size:
+    0.7rem;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.scp-delete-modal__actions {
+  display: flex;
+
+  justify-content:
+    flex-end;
+
+  gap: 10px;
+
+  padding:
+    18px 24px;
+
+  border-top:
+    1px solid #2e332f;
+
+  background:
+    #0c0f0d;
+}
+
+.scp-delete-modal__actions button {
+  min-height:
+    42px;
+
+  padding:
+    10px 16px;
+
+  border:
+    1px solid #424944;
+
+  background:
+    transparent;
+
+  color:
+    #afb8b2;
+
+  font-family:
+    inherit;
+
+  font-size:
+    0.68rem;
+
+  letter-spacing:
+    0.07em;
+
+  cursor:
+    pointer;
+}
+
+.scp-delete-modal__actions button:disabled {
+  opacity:
+    0.35;
+
+  cursor:
+    not-allowed;
+}
+
+.scp-delete-modal__abort:hover:not(:disabled) {
+  background:
+    #151916;
+}
+
+.scp-delete-modal__confirm {
+  border-color:
+    #764848 !important;
+
+  color:
+    #c87878 !important;
+}
+
+.scp-delete-modal__confirm:hover:not(:disabled) {
+  background:
+    #251515;
+}
+
+
+/* =========================================
+   ANIMATION
+========================================= */
+
+@keyframes scp-delete-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scp-delete-panel-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(10px)
+      scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 640px) {
+  .scp-delete-modal__backdrop {
+    padding: 14px;
+  }
+
+  .scp-delete-modal__record {
+    grid-template-columns:
+      1fr;
+  }
+
+  .scp-delete-modal__header {
+    padding:
+      20px 18px 16px;
+  }
+
+  .scp-delete-modal__alert,
+  .scp-delete-modal__record {
+    margin-left:
+      18px;
+
+    margin-right:
+      18px;
+  }
+
+  .scp-delete-modal__confirmation {
+    padding:
+      0 18px 20px;
+  }
+
+  .scp-delete-modal__actions {
+    flex-direction:
+      column-reverse;
+
+    padding:
+      16px 18px;
+  }
+
+  .scp-delete-modal__actions button {
+    width: 100%;
+  }
+}
