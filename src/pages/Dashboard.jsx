@@ -2,37 +2,31 @@ import StatusCard from "../components/dashboard/StatusCard";
 import SystemStatus from "../components/dashboard/SystemStatus";
 import ActivityLog from "../components/dashboard/ActivityLog";
 import ActiveAlerts from "../components/dashboard/ActiveAlerts";
-import { useAuth } from "../context/AuthContext";
 
 function Dashboard() {
-    const {
-  user,
-  isAuthenticated,
-  isAuthLoading,
-} = useAuth();
-
-console.log("[AUTH CONTEXT]", {
-  user,
-  isAuthenticated,
-  isAuthLoading,
-});
-
   return (
     <section className="command-center">
+
       <div className="page-heading">
+
         <div>
           <p className="page-heading__eyebrow">
             SITE-19 // OPERATIONS
           </p>
-          <h2>COMMAND CENTER</h2>
+
+          <h2>
+            COMMAND CENTER
+          </h2>
         </div>
 
-        <span className="page-heading__status">
+        <span className="page-heading__status status-online">
           ● LIVE STATUS
         </span>
+
       </div>
 
       <div className="status-grid">
+
         <StatusCard
           label="ACTIVE PERSONNEL"
           value="247"
@@ -56,14 +50,19 @@ console.log("[AUTH CONTEXT]", {
           value="ELEVATED"
           status="LEVEL 3"
         />
+
       </div>
 
       <div className="dashboard-grid">
+
         <SystemStatus />
+
         <ActiveAlerts />
+
       </div>
 
       <ActivityLog />
+
     </section>
   );
 }

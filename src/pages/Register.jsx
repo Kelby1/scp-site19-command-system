@@ -1,78 +1,149 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  useState,
+} from "react";
+
+import {
+  Link,
+} from "react-router-dom";
+
 import { authService } from "../services/scp/auth/authService";
 
+import "../styles/auth.css";
+
 function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] =
+    useState("");
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [password, setPassword] =
+    useState("");
 
-  async function handleSubmit(event) {
+  const [
+    confirmPassword,
+    setConfirmPassword,
+  ] = useState("");
+
+  const [
+    isLoading,
+    setIsLoading,
+  ] = useState(false);
+
+  const [
+    errorMessage,
+    setErrorMessage,
+  ] = useState("");
+
+  const [
+    successMessage,
+    setSuccessMessage,
+  ] = useState("");
+
+  async function handleSubmit(
+    event
+  ) {
     event.preventDefault();
 
     setErrorMessage("");
     setSuccessMessage("");
 
-    if (!email || !password || !confirmPassword) {
-      setErrorMessage("ALL FIELDS ARE REQUIRED.");
+    if (
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+      setErrorMessage(
+        "ALL FIELDS ARE REQUIRED."
+      );
+
       return;
     }
 
-    if (password !== confirmPassword) {
-      setErrorMessage("PASSWORD CONFIRMATION DOES NOT MATCH.");
+    if (
+      password !==
+      confirmPassword
+    ) {
+      setErrorMessage(
+        "PASSWORD CONFIRMATION DOES NOT MATCH."
+      );
+
       return;
     }
 
-    if (password.length < 8) {
+    if (
+      password.length < 8
+    ) {
       setErrorMessage(
         "PASSWORD MUST CONTAIN AT LEAST 8 CHARACTERS."
       );
+
       return;
     }
 
     setIsLoading(true);
 
-    const { data, error } = await authService.signUp(
-      email,
-      password
-    );
+    const {
+      error,
+    } =
+      await authService.signUp(
+        email,
+        password
+      );
 
     if (error) {
-      console.error("[AUTH][REGISTER]", error);
+      console.error(
+        "[AUTH][REGISTER]",
+        error
+      );
+
       setErrorMessage(
-        error.message || "ACCOUNT REGISTRATION FAILED."
-      );
-    } else {
-      console.log("[AUTH][REGISTER]", data);
-
-      setSuccessMessage(
-        "REGISTRATION RECEIVED. CHECK YOUR EMAIL FOR VERIFICATION."
+        error.message ??
+          "ACCOUNT REGISTRATION FAILED."
       );
 
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
+      setIsLoading(false);
+
+      return;
     }
+
+    setSuccessMessage(
+      "REGISTRATION RECEIVED. CHECK YOUR EMAIL FOR VERIFICATION."
+    );
+
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
 
     setIsLoading(false);
   }
 
   return (
-    <section className="auth-page">
-      <div className="auth-panel">
-        <div className="auth-panel__header">
-          <p>SITE-19 // PERSONNEL REGISTRATION</p>
-          <h2>CREATE PERSONNEL ACCOUNT</h2>
-        </div>
+    <main className="auth-page">
+
+      <section className="auth-panel">
+
+        <header className="auth-panel__header">
+
+          <p>
+            SITE-19 // PERSONNEL REGISTRATION
+          </p>
+
+          <h1>
+            CREATE PERSONNEL ACCOUNT
+          </h1>
+
+          <div className="auth-panel__header-description">
+            New identities enter Site-19
+            with restricted authorization
+            until reviewed by an active
+            administrator.
+          </div>
+
+        </header>
 
         <form
           className="auth-form"
           onSubmit={handleSubmit}
         >
+
           <label htmlFor="email">
             FOUNDATION EMAIL
           </label>
@@ -83,8 +154,11 @@ function Register() {
             autoComplete="email"
             placeholder="personnel@example.com"
             value={email}
+            disabled={isLoading}
             onChange={(event) =>
-              setEmail(event.target.value)
+              setEmail(
+                event.target.value
+              )
             }
           />
 
@@ -96,10 +170,13 @@ function Register() {
             id="password"
             type="password"
             autoComplete="new-password"
-            placeholder="ENTER PASSWORD"
+            placeholder="MINIMUM 8 CHARACTERS"
             value={password}
+            disabled={isLoading}
             onChange={(event) =>
-              setPassword(event.target.value)
+              setPassword(
+                event.target.value
+              )
             }
           />
 
@@ -113,8 +190,11 @@ function Register() {
             autoComplete="new-password"
             placeholder="CONFIRM PASSWORD"
             value={confirmPassword}
+            disabled={isLoading}
             onChange={(event) =>
-              setConfirmPassword(event.target.value)
+              setConfirmPassword(
+                event.target.value
+              )
             }
           />
 
@@ -136,20 +216,27 @@ function Register() {
             disabled={isLoading}
           >
             {isLoading
-              ? "PROCESSING..."
+              ? "PROCESSING REGISTRATION..."
               : "SUBMIT REGISTRATION"}
           </button>
+
         </form>
 
-        <div className="auth-panel__footer">
-          <span>ALREADY REGISTERED?</span>
+        <footer className="auth-panel__footer">
+
+          <span>
+            ALREADY REGISTERED?
+          </span>
 
           <Link to="/login">
             ACCESS LOGIN TERMINAL
           </Link>
-        </div>
-      </div>
-    </section>
+
+        </footer>
+
+      </section>
+
+    </main>
   );
 }
 

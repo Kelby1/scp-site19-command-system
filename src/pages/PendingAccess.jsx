@@ -5,8 +5,11 @@ import {
 
 import { useAuth } from "../context/AuthContext";
 
+import "../styles/auth.css";
+
 function PendingAccess() {
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
   const {
     profile,
@@ -18,17 +21,32 @@ function PendingAccess() {
   if (isProfileLoading) {
     return (
       <main className="auth-page">
+
         <section className="auth-panel">
 
-          <p>
-            SITE-19 // PERSONNEL AUTHORIZATION
-          </p>
+          <header className="auth-panel__header">
 
-          <h1>
-            VERIFYING PERSONNEL STATUS...
-          </h1>
+            <p>
+              SITE-19 // PERSONNEL AUTHORIZATION
+            </p>
+
+            <h1>
+              VERIFYING PERSONNEL STATUS
+            </h1>
+
+          </header>
+
+          <div className="auth-status">
+
+            <div className="auth-status__notice">
+              Retrieving personnel
+              authorization record...
+            </div>
+
+          </div>
 
         </section>
+
       </main>
     );
   }
@@ -58,18 +76,6 @@ function PendingAccess() {
   }
 
   if (
-    profile.accountStatus ===
-    "SUSPENDED"
-  ) {
-    return (
-      <Navigate
-        to="/access-denied"
-        replace
-      />
-    );
-  }
-
-  if (
     profile.accountStatus !==
     "PENDING"
   ) {
@@ -82,8 +88,10 @@ function PendingAccess() {
   }
 
   async function handleLogout() {
-    const { success, error } =
-      await logout();
+    const {
+      success,
+      error,
+    } = await logout();
 
     if (!success) {
       console.error(
@@ -104,48 +112,105 @@ function PendingAccess() {
 
   return (
     <main className="auth-page">
+
       <section className="auth-panel">
 
-        <p>
-          SITE-19 // PERSONNEL AUTHORIZATION
-        </p>
+        <header className="auth-panel__header">
 
-        <h1>
-          ACCESS PENDING
-        </h1>
+          <p>
+            SITE-19 // PERSONNEL AUTHORIZATION
+          </p>
 
-        <p>
-          Personnel identity has been verified,
-          but Site-19 authorization has not yet
-          been approved.
-        </p>
+          <h1>
+            ACCESS PENDING
+          </h1>
 
-        <p>
-          PERSONNEL: {profile.displayName}
-        </p>
+          <div className="auth-panel__header-description">
+            Identity verification
+            succeeded. Site-19 access
+            requires administrator
+            authorization.
+          </div>
 
-        <p>
-          ROLE: {profile.role}
-        </p>
+        </header>
 
-        <p>
-          CLEARANCE LEVEL:{" "}
-          {profile.clearanceLevel}
-        </p>
+        <div className="auth-status">
 
-        <p>
-          STATUS:{" "}
-          {profile.accountStatus}
-        </p>
+          <div className="auth-status__indicator auth-status__indicator--pending">
+            ⧗
+          </div>
 
-        <button
-          type="button"
-          onClick={handleLogout}
-        >
-          LOGOUT
-        </button>
+          <div className="auth-status__notice auth-status__notice--pending">
+
+            <strong>
+              AUTHORIZATION REVIEW REQUIRED
+            </strong>
+
+            Your account exists, but
+            classified systems remain
+            inaccessible until an active
+            administrator approves the
+            personnel record.
+
+          </div>
+
+          <div className="auth-status__profile">
+
+            <div>
+              <span>
+                PERSONNEL
+              </span>
+
+              <strong>
+                {profile.displayName}
+              </strong>
+            </div>
+
+            <div>
+              <span>
+                ROLE
+              </span>
+
+              <strong>
+                {profile.role}
+              </strong>
+            </div>
+
+            <div>
+              <span>
+                CLEARANCE
+              </span>
+
+              <strong>
+                LEVEL{" "}
+                {profile.clearanceLevel}
+              </strong>
+            </div>
+
+            <div>
+              <span>
+                STATUS
+              </span>
+
+              <strong>
+                {profile.accountStatus}
+              </strong>
+            </div>
+
+          </div>
+
+          <button
+            type="button"
+            className="auth-security-button"
+            onClick={handleLogout}
+          >
+            TERMINATE SESSION
+          </button>
+
+        </div>
 
       </section>
+
     </main>
   );
 }

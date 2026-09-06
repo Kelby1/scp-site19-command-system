@@ -1,0 +1,619 @@
+/* =========================================================
+   SITE-19 AUTHENTICATION / SECURITY SCREENS
+   ========================================================= */
+
+.auth-page {
+  min-height:
+    100vh;
+
+  min-height:
+    100dvh;
+
+  padding:
+    30px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #111612 0%,
+      var(--bg-app) 55%,
+      #070908 100%
+    );
+}
+
+
+/* =========================================================
+   PANEL
+   ========================================================= */
+
+.auth-panel {
+  width:
+    min(
+      520px,
+      100%
+    );
+
+  border:
+    1px solid
+    var(--border-default);
+
+  background:
+    var(--bg-panel);
+
+  box-shadow:
+    0 30px 90px
+    rgba(0, 0, 0, 0.45);
+}
+
+
+/* =========================================================
+   SECURITY STRIP
+   ========================================================= */
+
+.auth-panel::before {
+  content:
+    "SECURE CONTAINMENT FOUNDATION // SITE-19";
+
+  display:
+    block;
+
+  padding:
+    10px 18px;
+
+  border-bottom:
+    1px solid
+    var(--border-default);
+
+  background:
+    #0a0d0b;
+
+  color:
+    var(--text-muted);
+
+  font-size:
+    0.58rem;
+
+  letter-spacing:
+    0.14em;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.auth-panel__header {
+  padding:
+    26px 26px 22px;
+
+  border-bottom:
+    1px solid
+    var(--border-default);
+}
+
+.auth-panel__header p {
+  margin-bottom:
+    8px;
+
+  color:
+    var(--text-muted);
+
+  font-size:
+    0.65rem;
+
+  letter-spacing:
+    0.13em;
+}
+
+.auth-panel__header h1,
+.auth-panel__header h2 {
+  margin: 0;
+
+  color:
+    var(--text-bright);
+
+  font-size:
+    1.2rem;
+
+  letter-spacing:
+    0.08em;
+}
+
+.auth-panel__header-description {
+  margin-top:
+    12px;
+
+  color:
+    var(--text-soft);
+
+  font-size:
+    0.72rem;
+
+  line-height:
+    1.7;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.auth-form {
+  padding:
+    24px 26px;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    10px;
+}
+
+.auth-form label {
+  margin-top:
+    4px;
+
+  color:
+    var(--text-muted);
+
+  font-size:
+    0.64rem;
+
+  letter-spacing:
+    0.09em;
+}
+
+.auth-form input {
+  width:
+    100%;
+
+  min-height:
+    var(--control-height);
+
+  padding:
+    11px 12px;
+
+  border:
+    1px solid
+    var(--border-default);
+
+  outline:
+    none;
+
+  background:
+    var(--bg-input);
+
+  color:
+    var(--text-primary);
+
+  font-family:
+    inherit;
+
+  transition:
+    border-color
+      var(--transition-fast),
+    background-color
+      var(--transition-fast);
+}
+
+.auth-form input::placeholder {
+  color:
+    #606963;
+}
+
+.auth-form input:hover:not(:disabled) {
+  border-color:
+    var(--border-strong);
+}
+
+.auth-form input:focus {
+  border-color:
+    var(--border-focus);
+}
+
+.auth-form input:disabled {
+  opacity:
+    0.55;
+
+  cursor:
+    not-allowed;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
+.auth-submit,
+.auth-security-button {
+  width:
+    100%;
+
+  min-height:
+    var(--control-height);
+
+  padding:
+    11px 14px;
+
+  border:
+    1px solid
+    var(--border-strong);
+
+  background:
+    transparent;
+
+  color:
+    var(--text-secondary);
+
+  font-family:
+    inherit;
+
+  font-size:
+    0.7rem;
+
+  letter-spacing:
+    0.07em;
+
+  cursor:
+    pointer;
+
+  transition:
+    background-color
+      var(--transition-fast),
+    border-color
+      var(--transition-fast),
+    color
+      var(--transition-fast);
+}
+
+.auth-submit {
+  margin-top:
+    10px;
+}
+
+.auth-submit:hover:not(:disabled),
+.auth-security-button:hover:not(:disabled) {
+  border-color:
+    var(--border-focus);
+
+  background:
+    var(--bg-panel-hover);
+
+  color:
+    var(--text-bright);
+}
+
+.auth-submit:disabled,
+.auth-security-button:disabled {
+  opacity:
+    0.45;
+
+  cursor:
+    not-allowed;
+}
+
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+.auth-message {
+  margin-top:
+    8px;
+
+  padding:
+    11px 12px;
+
+  border:
+    1px solid
+    var(--border-default);
+
+  font-size:
+    0.68rem;
+
+  line-height:
+    1.6;
+}
+
+.auth-message--success {
+  border-color:
+    var(--status-success-strong);
+
+  color:
+    var(--status-success);
+}
+
+.auth-message--error {
+  border-color:
+    var(--border-danger);
+
+  background:
+    var(--bg-danger);
+
+  color:
+    var(--status-danger);
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.auth-panel__footer {
+  padding:
+    17px 26px;
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    12px;
+
+  border-top:
+    1px solid
+    var(--border-default);
+
+  background:
+    #0d100e;
+}
+
+.auth-panel__footer span {
+  color:
+    var(--text-muted);
+
+  font-size:
+    0.61rem;
+
+  letter-spacing:
+    0.08em;
+}
+
+.auth-panel__footer a {
+  color:
+    var(--text-secondary);
+
+  font-size:
+    0.65rem;
+
+  text-decoration:
+    none;
+}
+
+.auth-panel__footer a:hover {
+  color:
+    var(--text-bright);
+}
+
+
+/* =========================================================
+   ACCOUNT STATUS SCREENS
+   ========================================================= */
+
+.auth-status {
+  padding:
+    26px;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    20px;
+}
+
+.auth-status__notice {
+  padding:
+    14px;
+
+  border:
+    1px solid
+    var(--border-default);
+
+  background:
+    var(--bg-app);
+
+  color:
+    var(--text-soft);
+
+  font-size:
+    0.72rem;
+
+  line-height:
+    1.7;
+}
+
+.auth-status__notice--pending {
+  border-color:
+    #675f3e;
+}
+
+.auth-status__notice--denied {
+  border-color:
+    var(--border-danger);
+
+  background:
+    var(--bg-danger);
+}
+
+.auth-status__notice strong {
+  display:
+    block;
+
+  margin-bottom:
+    6px;
+
+  color:
+    var(--text-primary);
+
+  font-size:
+    0.7rem;
+
+  letter-spacing:
+    0.07em;
+}
+
+
+/* =========================================================
+   PERSONNEL INFORMATION
+   ========================================================= */
+
+.auth-status__profile {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    1px;
+
+  border:
+    1px solid
+    var(--border-default);
+
+  background:
+    var(--border-default);
+}
+
+.auth-status__profile > div {
+  min-width:
+    0;
+
+  padding:
+    13px;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    6px;
+
+  background:
+    var(--bg-app);
+}
+
+.auth-status__profile span {
+  color:
+    var(--text-muted);
+
+  font-size:
+    0.58rem;
+
+  letter-spacing:
+    0.09em;
+}
+
+.auth-status__profile strong {
+  overflow-wrap:
+    anywhere;
+
+  color:
+    var(--text-primary);
+
+  font-size:
+    0.72rem;
+}
+
+
+/* =========================================================
+   SECURITY STATUS ICON
+   ========================================================= */
+
+.auth-status__indicator {
+  width:
+    54px;
+
+  height:
+    54px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  border:
+    1px solid
+    var(--border-strong);
+
+  color:
+    var(--text-secondary);
+
+  font-size:
+    1.2rem;
+}
+
+.auth-status__indicator--pending {
+  border-color:
+    #675f3e;
+
+  color:
+    var(--status-warning);
+}
+
+.auth-status__indicator--denied {
+  border-color:
+    var(--border-danger);
+
+  color:
+    var(--status-danger);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .auth-page {
+    padding:
+      16px;
+  }
+
+  .auth-panel__header,
+  .auth-form,
+  .auth-status {
+    padding:
+      20px;
+  }
+
+  .auth-panel__footer {
+    padding:
+      16px 20px;
+
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .auth-status__profile {
+    grid-template-columns:
+      1fr;
+  }
+}

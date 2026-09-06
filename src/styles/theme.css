@@ -1,0 +1,371 @@
+/* =========================================================
+   SITE-19 GLOBAL DESIGN SYSTEM
+   ========================================================= */
+
+:root {
+  /* =========================
+     APPLICATION DIMENSIONS
+  ========================= */
+
+  --header-height: 80px;
+
+  --sidebar-width: 240px;
+  --sidebar-width-tablet: 210px;
+
+
+  /* =========================
+     BACKGROUNDS
+  ========================= */
+
+  --bg-app: #0b0d0c;
+
+  --bg-sidebar: #0e110f;
+
+  --bg-panel: #111512;
+
+  --bg-panel-hover: #151a16;
+
+  --bg-input: #090c0a;
+
+  --bg-danger: #171211;
+
+  --bg-danger-hover: #211616;
+
+
+  /* =========================
+     BORDERS
+  ========================= */
+
+  --border-subtle: #202720;
+
+  --border-default: #2f3833;
+
+  --border-strong: #3e4b43;
+
+  --border-focus: #58675d;
+
+  --border-danger: #6b4545;
+
+
+  /* =========================
+     TEXT
+  ========================= */
+
+  --text-primary: #d8dedb;
+
+  --text-bright: #e8eee9;
+
+  --text-secondary: #aeb8b0;
+
+  --text-muted: #7e8981;
+
+  --text-soft: #8f9992;
+
+
+  /* =========================
+     STATUS
+  ========================= */
+
+  --status-success: #9ab0a1;
+
+  --status-success-strong: #6f9f7a;
+
+  --status-warning: #c0ad76;
+
+  --status-danger: #b97878;
+
+  --status-danger-bright: #c48181;
+
+
+  /* =========================
+     SPACING
+  ========================= */
+
+  --space-xs: 6px;
+
+  --space-sm: 10px;
+
+  --space-md: 15px;
+
+  --space-lg: 20px;
+
+  --space-xl: 35px;
+
+
+  /* =========================
+     CONTROL SIZE
+  ========================= */
+
+  --control-height: 42px;
+
+
+  /* =========================
+     MOTION
+  ========================= */
+
+  --transition-fast: 120ms ease;
+}
+
+
+/* =========================================================
+   GLOBAL RESET
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  min-width: 320px;
+
+  min-height: 100%;
+}
+
+body {
+  min-width: 320px;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  background:
+    var(--bg-app);
+
+  color:
+    var(--text-primary);
+
+  font-family:
+    "Courier New",
+    monospace;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+
+/* =========================================================
+   ACCESSIBILITY — KEYBOARD FOCUS
+   ========================================================= */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline:
+    2px solid
+    var(--border-focus);
+
+  outline-offset:
+    3px;
+}
+
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+  background:
+    var(--border-focus);
+
+  color:
+    var(--text-bright);
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+* {
+  scrollbar-width:
+    thin;
+
+  scrollbar-color:
+    var(--border-strong)
+    var(--bg-app);
+}
+
+*::-webkit-scrollbar {
+  width: 7px;
+
+  height: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background:
+    var(--bg-app);
+}
+
+*::-webkit-scrollbar-thumb {
+  background:
+    var(--border-strong);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background:
+    var(--border-focus);
+}
+
+
+/* =========================================================
+   SHARED PAGE HEADING
+   ========================================================= */
+
+.page-heading {
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-start;
+
+  gap: 2rem;
+
+  padding-bottom:
+    20px;
+
+  border-bottom:
+    1px solid
+    var(--border-default);
+}
+
+.page-heading__eyebrow {
+  margin-bottom:
+    8px;
+
+  color:
+    var(--text-muted);
+
+  font-size:
+    0.7rem;
+
+  letter-spacing:
+    0.12em;
+}
+
+.page-heading h2 {
+  margin: 0;
+
+  color:
+    var(--text-primary);
+
+  font-size:
+    1.5rem;
+
+  letter-spacing:
+    0.08em;
+}
+
+.page-heading__status {
+  flex-shrink: 0;
+
+  padding:
+    8px 10px;
+
+  border:
+    1px solid
+    var(--border-strong);
+
+  color:
+    var(--status-success);
+
+  font-size:
+    0.72rem;
+
+  white-space:
+    nowrap;
+}
+
+
+/* =========================================================
+   SHARED STATUS STATES
+   ========================================================= */
+
+.status-online {
+  color:
+    var(--status-success);
+
+  border-color:
+    var(--border-strong);
+}
+
+.status-connecting {
+  color:
+    var(--text-muted);
+
+  opacity: 0.8;
+}
+
+.status-offline {
+  color:
+    var(--status-danger);
+
+  border-color:
+    var(--border-danger);
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior:
+      auto !important;
+
+    animation-duration:
+      0.01ms !important;
+
+    animation-iteration-count:
+      1 !important;
+
+    transition-duration:
+      0.01ms !important;
+  }
+}
+
+
+/* =========================================================
+   MOBILE PAGE HEADING
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .page-heading {
+    flex-direction:
+      column;
+
+    gap:
+      10px;
+  }
+
+  .page-heading__status {
+    white-space:
+      normal;
+  }
+}

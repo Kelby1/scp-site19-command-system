@@ -1,327 +1,937 @@
-/* =========================================
-   SITE-19 SCP ADMIN MANAGEMENT
-========================================= */
+/* =========================================================
+   SITE-19 SCP DATABASE / MANAGEMENT
+   ========================================================= */
+
+
+/* =========================================================
+   DATABASE PAGE
+   ========================================================= */
+
+.scp-database {
+  width:
+    100%;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    20px;
+}
+
+
+/* =========================================================
+   DATABASE CONTROLS
+   ========================================================= */
+
+.database-controls {
+  display:
+    grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    200px;
+
+  gap:
+    12px;
+}
+
+.database-controls input,
+.database-controls select {
+  width:
+    100%;
+
+  min-height:
+    var(--control-height);
+
+  padding:
+    11px 12px;
+
+  border:
+    1px solid
+    var(--border-default);
+
+  outline:
+    none;
+
+  background:
+    var(--bg-panel);
+
+  color:
+    var(--text-primary);
+
+  font-family:
+    inherit;
+}
+
+.database-controls input::placeholder {
+  color:
+    #657068;
+}
+
+.database-controls input:hover,
+.database-controls select:hover {
+  border-color:
+    var(--border-strong);
+}
+
+.database-controls input:focus,
+.database-controls select:focus {
+  border-color:
+    var(--border-focus);
+}
+
+
+/* =========================================================
+   DATABASE GRID
+   ========================================================= */
+
+.scp-grid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    15px;
+}
+
+
+/* =========================================================
+   SCP CARD
+   ========================================================= */
+
+.scp-card {
+  min-width:
+    0;
+
+  padding:
+    20px;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    15px;
+
+  border:
+    1px solid
+    var(--border-default);
+
+  background:
+    var(--bg-panel);
+
+  transition:
+    border-color
+      var(--transition-fast);
+}
+
+.scp-card:hover {
+  border-color:
+    var(--border-focus);
+}
+
+.scp-card__header {
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    12px;
+}
+
+.scp-card__header > span:first-child {
+  color:
+    var(--text-bright);
+
+  font-size:
+    0.8rem;
+
+  font-weight:
+    bold;
+}
+
+.scp-card__header > span:last-child {
+  padding:
+    4px 8px;
+
+  border:
+    1px solid
+    var(--border-strong);
+
+  font-size:
+    0.65rem;
+}
+
+.class-safe {
+  color:
+    var(--status-success);
+}
+
+.class-euclid {
+  color:
+    var(--status-warning);
+}
+
+.class-keter {
+  color:
+    var(--status-danger);
+}
+
+.scp-card h3 {
+  color:
+    var(--text-bright);
+
+  font-size:
+    1.1rem;
+}
+
+.scp-card p {
+  overflow-wrap:
+    anywhere;
+
+  color:
+    var(--text-soft);
+
+  font-size:
+    0.75rem;
+
+  line-height:
+    1.6;
+}
+
+.scp-card__details {
+  padding:
+    12px 0;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    7px;
+
+  border-top:
+    1px solid
+    var(--border-subtle);
+
+  border-bottom:
+    1px solid
+    var(--border-subtle);
+
+  color:
+    var(--text-muted);
+
+  font-size:
+    0.65rem;
+}
+
+.scp-card__details strong {
+  color:
+    var(--text-secondary);
+}
+
+
+/* =========================================================
+   STANDARD SCP BUTTON
+   ========================================================= */
+
+.scp-card__button {
+  width:
+    100%;
+
+  min-height:
+    var(--control-height);
+
+  padding:
+    10px 12px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  border:
+    1px solid
+    var(--border-strong);
+
+  background:
+    transparent;
+
+  color:
+    var(--text-secondary);
+
+  font-family:
+    inherit;
+
+  font-size:
+    0.7rem;
+
+  text-align:
+    center;
+
+  text-decoration:
+    none;
+
+  cursor:
+    pointer;
+
+  transition:
+    background-color
+      var(--transition-fast),
+    border-color
+      var(--transition-fast),
+    color
+      var(--transition-fast);
+}
+
+.scp-card__button:hover {
+  border-color:
+    var(--border-focus);
+
+  background:
+    var(--bg-panel-hover);
+
+  color:
+    var(--text-bright);
+}
+
+
+/*
+ * Edit page's RETURN TO FILE uses
+ * the same visual language, but it
+ * should NOT stretch across the panel.
+ */
+
+.scp-admin-panel__header
+.scp-card__button {
+  width:
+    auto;
+
+  flex-shrink:
+    0;
+
+  padding-left:
+    16px;
+
+  padding-right:
+    16px;
+}
+
+
+/* =========================================================
+   DATABASE STATES
+   ========================================================= */
+
+.database-loading,
+.database-error,
+.database-empty {
+  grid-column:
+    1 / -1;
+
+  min-height:
+    120px;
+
+  padding:
+    24px;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  justify-content:
+    center;
+
+  gap:
+    8px;
+
+  border:
+    1px solid
+    var(--border-default);
+
+  background:
+    var(--bg-panel);
+}
+
+.database-loading span {
+  color:
+    var(--text-secondary);
+
+  font-size:
+    0.75rem;
+
+  letter-spacing:
+    0.07em;
+}
+
+.database-loading p,
+.database-error p {
+  color:
+    var(--text-muted);
+
+  font-size:
+    0.7rem;
+}
+
+.database-error {
+  border-color:
+    var(--border-danger);
+
+  background:
+    var(--bg-danger);
+}
+
+.database-error strong {
+  color:
+    var(--status-danger);
+}
+
+.database-empty {
+  border-style:
+    dashed;
+
+  color:
+    var(--text-muted);
+
+  font-size:
+    0.75rem;
+
+  text-align:
+    center;
+}
+
+
+/* =========================================================
+   RETRY BUTTON
+   ========================================================= */
+
+.database-retry {
+  width:
+    fit-content;
+
+  min-height:
+    var(--control-height);
+
+  margin-top:
+    8px;
+
+  padding:
+    10px 14px;
+
+  border:
+    1px solid
+    var(--border-strong);
+
+  background:
+    transparent;
+
+  color:
+    var(--text-secondary);
+
+  font-family:
+    inherit;
+
+  cursor:
+    pointer;
+}
+
+.database-retry:hover {
+  border-color:
+    var(--border-focus);
+
+  background:
+    var(--bg-panel-hover);
+
+  color:
+    var(--text-bright);
+}
+
+
+/* =========================================================
+   ADMIN MANAGEMENT PANEL
+   ========================================================= */
 
 .scp-admin-panel {
-  padding: 20px;
-  border: 1px solid #3e4b43;
-  background: #111512;
+  padding:
+    20px;
 
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  border:
+    1px solid
+    var(--border-strong);
+
+  background:
+    var(--bg-panel);
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    20px;
 }
 
 .scp-admin-panel__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-start;
+
+  gap:
+    20px;
 }
 
 .scp-admin-panel__header p {
-  margin-bottom: 6px;
+  margin-bottom:
+    6px;
 
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
+  color:
+    var(--text-muted);
 
-  color: #7e8981;
+  font-size:
+    0.7rem;
+
+  letter-spacing:
+    0.12em;
 }
 
 .scp-admin-panel__header h3 {
-  margin-bottom: 8px;
+  margin-bottom:
+    8px;
 
-  font-size: 1rem;
-  letter-spacing: 0.08em;
+  color:
+    var(--text-primary);
+
+  font-size:
+    1rem;
+
+  letter-spacing:
+    0.08em;
 }
 
 .scp-admin-panel__header span {
-  font-size: 0.7rem;
-  color: #9ab0a1;
+  color:
+    var(--status-success);
+
+  font-size:
+    0.7rem;
 }
 
 
-/* =========================================
-   GENERAL ADMIN BUTTONS
-========================================= */
+/* =========================================================
+   ADMIN BUTTONS
+   ========================================================= */
 
 .scp-admin-button,
 .scp-admin-panel button,
 .scp-card__admin-button {
-  box-sizing: border-box;
+  min-height:
+    var(--control-height);
 
-  padding: 11px 14px;
+  padding:
+    10px 14px;
 
-  border: 1px solid #3e4b43;
+  border:
+    1px solid
+    var(--border-strong);
 
-  background: transparent;
-  color: #aeb8b0;
+  background:
+    transparent;
 
-  font-family: inherit;
-  font-size: 0.7rem;
+  color:
+    var(--text-secondary);
 
-  cursor: pointer;
+  font-family:
+    inherit;
+
+  font-size:
+    0.7rem;
+
+  cursor:
+    pointer;
+
+  transition:
+    background-color
+      var(--transition-fast),
+    border-color
+      var(--transition-fast),
+    color
+      var(--transition-fast);
 }
 
-.scp-admin-button:hover,
-.scp-admin-panel button:hover,
-.scp-card__admin-button:hover {
-  background: #151a16;
-  color: #e8eee9;
+.scp-admin-button:hover:not(:disabled),
+.scp-admin-panel button:hover:not(:disabled),
+.scp-card__admin-button:hover:not(:disabled) {
+  border-color:
+    var(--border-focus);
+
+  background:
+    var(--bg-panel-hover);
+
+  color:
+    var(--text-bright);
 }
 
+.scp-admin-button:disabled,
 .scp-admin-panel button:disabled,
 .scp-card__admin-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  opacity:
+    0.5;
+
+  cursor:
+    not-allowed;
 }
 
 
-/* =========================================
-   MESSAGES
-========================================= */
+/* =========================================================
+   ADMIN MESSAGES
+   ========================================================= */
 
 .scp-admin-message {
-  padding: 12px;
+  padding:
+    12px;
 
-  border: 1px solid #3e4b43;
+  border:
+    1px solid
+    var(--border-strong);
 
-  font-size: 0.75rem;
+  font-size:
+    0.75rem;
 }
 
 .scp-admin-message--success {
-  border-color: #4f6b58;
-  color: #9ab0a1;
+  border-color:
+    var(--status-success-strong);
+
+  color:
+    var(--status-success);
 }
 
 .scp-admin-message--error {
-  border-color: #6b4545;
-  color: #c48181;
+  border-color:
+    var(--border-danger);
+
+  background:
+    var(--bg-danger);
+
+  color:
+    var(--status-danger-bright);
 }
 
 
-/* =========================================
+/* =========================================================
    CREATE / EDIT FORM
-========================================= */
+   ========================================================= */
 
 .scp-admin-form {
-  padding-top: 20px;
+  padding-top:
+    20px;
 
-  border-top: 1px solid #2f3833;
-
-  display: grid;
+  display:
+    grid;
 
   grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
 
-  gap: 16px;
+  gap:
+    16px;
+
+  border-top:
+    1px solid
+    var(--border-default);
 }
 
 .scp-admin-form__heading {
-  grid-column: 1 / -1;
+  grid-column:
+    1 / -1;
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding-bottom:
+    15px;
 
-  gap: 15px;
+  display:
+    flex;
 
-  padding-bottom: 15px;
+  justify-content:
+    space-between;
 
-  border-bottom: 1px solid #2f3833;
+  align-items:
+    center;
+
+  gap:
+    15px;
+
+  border-bottom:
+    1px solid
+    var(--border-default);
 }
 
 .scp-admin-form__heading strong {
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
+  color:
+    var(--text-secondary);
+
+  font-size:
+    0.8rem;
+
+  letter-spacing:
+    0.08em;
+}
+
+.scp-admin-form__heading span {
+  color:
+    var(--text-muted);
+
+  font-size:
+    0.65rem;
 }
 
 .scp-admin-form label {
-  display: flex;
-  flex-direction: column;
+  display:
+    flex;
 
-  gap: 8px;
+  flex-direction:
+    column;
 
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  gap:
+    8px;
 
-  color: #8f9992;
+  color:
+    var(--text-soft);
+
+  font-size:
+    0.7rem;
+
+  letter-spacing:
+    0.08em;
 }
 
 .scp-admin-form input,
 .scp-admin-form select,
 .scp-admin-form textarea {
-  width: 100%;
+  width:
+    100%;
 
-  box-sizing: border-box;
+  padding:
+    12px;
 
-  padding: 12px;
+  border:
+    1px solid
+    var(--border-default);
 
-  border: 1px solid #2f3833;
+  outline:
+    none;
 
-  outline: none;
+  background:
+    var(--bg-input);
 
-  background: #0b0d0c;
-  color: #d8dedb;
+  color:
+    var(--text-primary);
 
-  font-family: inherit;
+  font-family:
+    inherit;
 }
 
-.scp-admin-form textarea {
-  resize: vertical;
-  line-height: 1.6;
+.scp-admin-form input:hover:not(:disabled),
+.scp-admin-form select:hover:not(:disabled),
+.scp-admin-form textarea:hover:not(:disabled) {
+  border-color:
+    var(--border-strong);
 }
 
 .scp-admin-form input:focus,
 .scp-admin-form select:focus,
 .scp-admin-form textarea:focus {
-  border-color: #58675d;
+  border-color:
+    var(--border-focus);
 }
 
 .scp-admin-form input:disabled,
 .scp-admin-form select:disabled,
 .scp-admin-form textarea:disabled {
-  opacity: 0.55;
+  opacity:
+    0.55;
+
+  cursor:
+    not-allowed;
+}
+
+.scp-admin-form textarea {
+  resize:
+    vertical;
+
+  line-height:
+    1.6;
 }
 
 .scp-admin-form__wide {
-  grid-column: 1 / -1;
+  grid-column:
+    1 / -1;
 }
 
 .scp-admin-form__actions {
-  grid-column: 1 / -1;
+  grid-column:
+    1 / -1;
 
-  display: flex;
-  justify-content: flex-end;
+  display:
+    flex;
 
-  gap: 10px;
+  justify-content:
+    flex-end;
+
+  gap:
+    10px;
 }
 
 
-/* =========================================
-   DELETE CONFIRMATION
-========================================= */
-
-.scp-delete-confirm {
-  padding: 20px;
-
-  border: 1px solid #5d4141;
-
-  background: #171211;
-}
-
-.scp-delete-confirm p {
-  margin-bottom: 8px;
-
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-
-  color: #b97878;
-}
-
-.scp-delete-confirm h3 {
-  margin-bottom: 10px;
-}
-
-.scp-delete-confirm span {
-  display: block;
-
-  color: #9b8585;
-
-  font-size: 0.75rem;
-  line-height: 1.6;
-}
-
-.scp-delete-confirm__actions {
-  margin-top: 20px;
-
-  display: flex;
-  justify-content: flex-end;
-
-  gap: 10px;
-}
-
-
-/* =========================================
-   DANGER BUTTONS
-========================================= */
-
-.scp-admin-button--danger,
-.scp-card__admin-button--danger {
-  border-color: #6b4545 !important;
-  color: #b97878 !important;
-}
-
-.scp-admin-button--danger:hover,
-.scp-card__admin-button--danger:hover {
-  background: #211616 !important;
-}
-
-
-/* =========================================
-   SCP CARD ACTIONS
-========================================= */
+/* =========================================================
+   CARD ACTIONS
+   ========================================================= */
 
 .scp-card__actions {
-  margin-top: auto;
+  margin-top:
+    auto;
 
-  display: grid;
+  display:
+    grid;
 
-  gap: 8px;
+  gap:
+    8px;
 }
 
-
-/*
- * EDIT RECORD uses React Router <Link>,
- * which becomes an <a> element.
- *
- * These rules make the link behave
- * visually like a real button.
- */
 .scp-card__admin-button {
-  display: flex;
+  width:
+    100%;
 
-  align-items: center;
-  justify-content: center;
+  min-height:
+    var(--control-height);
 
-  width: 100%;
-  min-height: 42px;
+  display:
+    flex;
 
-  box-sizing: border-box;
+  align-items:
+    center;
 
-  text-align: center;
-  text-decoration: none;
+  justify-content:
+    center;
 
-  letter-spacing: 0.04em;
+  text-align:
+    center;
+
+  text-decoration:
+    none;
+
+  letter-spacing:
+    0.04em;
 }
 
 
-/*
- * DELETE is an actual <button>.
- * Keep its dimensions consistent
- * with the EDIT link.
- */
-button.scp-card__admin-button {
-  min-height: 42px;
+/* =========================================================
+   DESTRUCTIVE ACTION
+   ========================================================= */
+
+.scp-card__admin-button--danger {
+  border-color:
+    var(--border-danger) !important;
+
+  color:
+    var(--status-danger) !important;
+}
+
+.scp-card__admin-button--danger:hover:not(:disabled) {
+  background:
+    var(--bg-danger-hover) !important;
 }
 
 
-/* =========================================
+/* =========================================================
    RESPONSIVE
-========================================= */
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .scp-grid {
+    grid-template-columns:
+      1fr;
+  }
+}
 
 @media (max-width: 800px) {
+
+  .database-controls {
+    grid-template-columns:
+      1fr;
+  }
+
   .scp-admin-panel__header {
-    flex-direction: column;
+    flex-direction:
+      column;
+  }
+
+  .scp-admin-panel__header
+  .scp-card__button {
+    width:
+      100%;
   }
 
   .scp-admin-form {
-    grid-template-columns: 1fr;
+    grid-template-columns:
+      1fr;
   }
 
   .scp-admin-form__heading,
   .scp-admin-form__wide,
   .scp-admin-form__actions {
-    grid-column: 1;
+    grid-column:
+      1;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .scp-admin-form__heading {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .scp-admin-form__actions {
+    flex-direction:
+      column-reverse;
+  }
+
+  .scp-admin-form__actions button {
+    width:
+      100%;
   }
 }

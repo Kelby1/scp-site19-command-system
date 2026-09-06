@@ -11,20 +11,32 @@ import {
 import { authService } from "../services/scp/auth/authService";
 import { useAuth } from "../context/AuthContext";
 
+import "../styles/auth.css";
+
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [isSubmitting, setIsSubmitting] =
-    useState(false);
-
-  const [errorMessage, setErrorMessage] =
+  const [email, setEmail] =
     useState("");
 
-  const [successMessage, setSuccessMessage] =
+  const [password, setPassword] =
     useState("");
 
-  const navigate = useNavigate();
+  const [
+    isSubmitting,
+    setIsSubmitting,
+  ] = useState(false);
+
+  const [
+    errorMessage,
+    setErrorMessage,
+  ] = useState("");
+
+  const [
+    successMessage,
+    setSuccessMessage,
+  ] = useState("");
+
+  const navigate =
+    useNavigate();
 
   const {
     isAuthenticated,
@@ -35,13 +47,8 @@ function Login() {
   } = useAuth();
 
   /*
-   * Post-login authorization flow.
-   *
-   * Every successful ACTIVE login starts
-   * a fresh Site-19 session at "/".
-   *
-   * We deliberately do NOT restore the
-   * previous browser route.
+   * Every authenticated identity begins
+   * a fresh Site-19 navigation session.
    */
   useEffect(() => {
     if (!isAuthenticated) {
@@ -55,7 +62,10 @@ function Login() {
       return;
     }
 
-    if (profileError || !profile) {
+    if (
+      profileError ||
+      !profile
+    ) {
       console.error(
         "[AUTH][POST LOGIN] PROFILE ERROR",
         profileError
@@ -86,20 +96,6 @@ function Login() {
     }
 
     if (
-      profile.accountStatus ===
-      "SUSPENDED"
-    ) {
-      navigate(
-        "/access-denied",
-        {
-          replace: true,
-        }
-      );
-
-      return;
-    }
-
-    if (
       profile.accountStatus !==
       "ACTIVE"
     ) {
@@ -112,18 +108,6 @@ function Login() {
 
       return;
     }
-
-    console.log(
-      "[AUTH][POST LOGIN REDIRECT]",
-      {
-        destination: "/",
-        role: profile.role,
-        status:
-          profile.accountStatus,
-        clearance:
-          profile.clearanceLevel,
-      }
-    );
 
     navigate(
       "/",
@@ -140,7 +124,9 @@ function Login() {
     navigate,
   ]);
 
-  async function handleSubmit(event) {
+  async function handleSubmit(
+    event
+  ) {
     event.preventDefault();
 
     setErrorMessage("");
@@ -156,7 +142,9 @@ function Login() {
 
     setIsSubmitting(true);
 
-    const { data, error } =
+    const {
+      error,
+    } =
       await authService.signIn(
         email,
         password
@@ -169,7 +157,7 @@ function Login() {
       );
 
       setErrorMessage(
-        error.message ||
+        error.message ??
           "AUTHENTICATION FAILED. CHECK CREDENTIALS."
       );
 
@@ -178,24 +166,16 @@ function Login() {
       return;
     }
 
-    console.log(
-      "[AUTH][LOGIN]",
-      data
-    );
-
     setSuccessMessage(
       "AUTHENTICATION SUCCESSFUL. VERIFYING PERSONNEL AUTHORIZATION..."
     );
 
     /*
-     * Do not navigate here.
+     * AuthContext finishes loading
+     * the correct personnel profile.
      *
-     * AuthContext receives the new
-     * Supabase session and loads the
-     * correct personnel profile.
-     *
-     * The useEffect above handles
-     * navigation after verification.
+     * Navigation is performed by
+     * the useEffect above.
      */
   }
 
@@ -210,23 +190,33 @@ function Login() {
     );
 
   return (
-    <section className="auth-page">
-      <div className="auth-panel">
+    <main className="auth-page">
 
-        <div className="auth-panel__header">
+      <section className="auth-panel">
+
+        <header className="auth-panel__header">
+
           <p>
             SITE-19 // PERSONNEL LOGIN
           </p>
 
-          <h2>
+          <h1>
             TERMINAL AUTHENTICATION
-          </h2>
-        </div>
+          </h1>
+
+          <div className="auth-panel__header-description">
+            Authenticate Foundation
+            credentials before accessing
+            classified Site-19 systems.
+          </div>
+
+        </header>
 
         <form
           className="auth-form"
           onSubmit={handleSubmit}
         >
+
           <label htmlFor="email">
             FOUNDATION EMAIL
           </label>
@@ -280,13 +270,15 @@ function Login() {
             className="auth-submit"
             disabled={isVerifying}
           >
-            {isSubmitting
+            {isVerifying
               ? "VERIFYING AUTHORIZATION..."
               : "AUTHENTICATE ACCESS"}
           </button>
+
         </form>
 
-        <div className="auth-panel__footer">
+        <footer className="auth-panel__footer">
+
           <span>
             NEW PERSONNEL?
           </span>
@@ -294,10 +286,12 @@ function Login() {
           <Link to="/register">
             CREATE ACCOUNT REGISTRATION
           </Link>
-        </div>
 
-      </div>
-    </section>
+        </footer>
+
+      </section>
+
+    </main>
   );
 }
 

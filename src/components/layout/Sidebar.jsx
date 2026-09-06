@@ -1,4 +1,8 @@
 import {
+  useState,
+} from "react";
+
+import {
   NavLink,
   useNavigate,
 } from "react-router-dom";
@@ -36,6 +40,11 @@ function Sidebar() {
   const navigate =
     useNavigate();
 
+  const [
+    isMobileOpen,
+    setIsMobileOpen,
+  ] = useState(false);
+
   const {
     user,
     profile,
@@ -47,7 +56,12 @@ function Sidebar() {
 
   const isAdmin =
     profile?.role === "ADMIN" &&
-    profile?.accountStatus === "ACTIVE";
+    profile?.accountStatus ===
+      "ACTIVE";
+
+  function closeMobileNavigation() {
+    setIsMobileOpen(false);
+  }
 
   async function handleLogout() {
     const {
@@ -64,6 +78,8 @@ function Sidebar() {
       return;
     }
 
+    setIsMobileOpen(false);
+
     navigate(
       "/login",
       {
@@ -73,21 +89,43 @@ function Sidebar() {
   }
 
   return (
-    <aside className="sidebar">
+    <aside
+      className={`sidebar ${
+        isMobileOpen
+          ? "sidebar--mobile-open"
+          : ""
+      }`}
+    >
 
-      {/* =========================
-          SIDEBAR HEADER
-      ========================= */}
+      <div className="sidebar__top">
 
-      <p className="sidebar__title">
-        SITE-19 // NAVIGATION
-      </p>
+        <p className="sidebar__title">
+          SITE-19 // NAVIGATION
+        </p>
 
-      {/* =========================
-          NAVIGATION
-      ========================= */}
+        <button
+          type="button"
+          className="sidebar__mobile-toggle"
+          aria-expanded={
+            isMobileOpen
+          }
+          aria-controls="site19-navigation"
+          onClick={() =>
+            setIsMobileOpen(
+              (current) =>
+                !current
+            )
+          }
+        >
+          {isMobileOpen
+            ? "CLOSE"
+            : "MENU"}
+        </button>
+
+      </div>
 
       <nav
+        id="site19-navigation"
         className="sidebar__navigation"
         aria-label="Site-19 navigation"
       >
@@ -97,6 +135,9 @@ function Sidebar() {
             <NavLink
               key={item.path}
               to={item.path}
+              onClick={
+                closeMobileNavigation
+              }
               className={({
                 isActive,
               }) =>
@@ -112,15 +153,14 @@ function Sidebar() {
           )
         )}
 
-        {/* =========================
-            ADMIN NAVIGATION
-        ========================= */}
-
         {isAdmin && (
           <>
             <NavLink
               to="/admin"
               end
+              onClick={
+                closeMobileNavigation
+              }
               className={({
                 isActive,
               }) =>
@@ -136,6 +176,9 @@ function Sidebar() {
 
             <NavLink
               to="/admin/audit"
+              onClick={
+                closeMobileNavigation
+              }
               className={({
                 isActive,
               }) =>
@@ -153,13 +196,7 @@ function Sidebar() {
 
       </nav>
 
-      {/* =========================
-          LOWER SIDEBAR
-      ========================= */}
-
       <div className="sidebar__bottom">
-
-        {/* PERSONNEL PROFILE */}
 
         <div className="sidebar__footer">
 
@@ -199,8 +236,6 @@ function Sidebar() {
           )}
 
         </div>
-
-        {/* AUTH SESSION */}
 
         <div className="sidebar-auth">
 
