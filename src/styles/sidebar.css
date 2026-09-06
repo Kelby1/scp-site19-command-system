@@ -1,0 +1,523 @@
+/* =========================================
+   SITE-19 STABLE APPLICATION SHELL
+========================================= */
+
+.app-layout {
+  min-height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* =========================================
+   STABLE HEADER
+========================================= */
+
+.header {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 1000;
+
+  width: 100%;
+
+  min-height: 80px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================
+   APPLICATION BODY
+========================================= */
+
+.app-layout__body {
+  flex: 1;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  min-height:
+    calc(100dvh - 80px);
+}
+
+
+/* =========================================
+   SIDEBAR SHELL
+========================================= */
+
+.sidebar {
+  /*
+   * Fixed layout width.
+   *
+   * Main content is no longer allowed
+   * to shrink or expand the sidebar.
+   */
+  width: 240px;
+
+  flex:
+    0 0 240px;
+
+  /*
+   * Sidebar always fills the visible
+   * area underneath the 80px header.
+   */
+  height:
+    calc(100dvh - 80px);
+
+  min-height: 0;
+
+  max-height:
+    calc(100dvh - 80px);
+
+  /*
+   * Keep the Site-19 navigation console
+   * visible when the main page becomes
+   * taller than the viewport.
+   */
+  position: sticky;
+
+  top: 80px;
+
+  align-self: flex-start;
+
+  padding:
+    25px 15px;
+
+  border-right:
+    1px solid #2f3833;
+
+  background:
+    #0e110f;
+
+  display: flex;
+
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   SIDEBAR TITLE
+========================================= */
+
+.sidebar__title {
+  flex-shrink: 0;
+
+  margin-bottom: 20px;
+
+  padding:
+    0 10px;
+
+  font-size:
+    0.7rem;
+
+  color:
+    #7e8981;
+
+  letter-spacing:
+    0.08em;
+}
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+.sidebar__navigation {
+  /*
+   * Navigation owns the available middle
+   * area of the sidebar.
+   */
+  flex:
+    1 1 auto;
+
+  min-height: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+
+  /*
+   * Prevent the navigation width from
+   * jumping when a scrollbar appears.
+   */
+  scrollbar-gutter: stable;
+}
+
+
+/* Small Site-19 scrollbar */
+
+.sidebar__navigation::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar__navigation::-webkit-scrollbar-track {
+  background:
+    transparent;
+}
+
+.sidebar__navigation::-webkit-scrollbar-thumb {
+  background:
+    #303a34;
+}
+
+.sidebar__navigation::-webkit-scrollbar-thumb:hover {
+  background:
+    #46534b;
+}
+
+
+/* =========================================
+   NAVIGATION ITEM
+========================================= */
+
+.sidebar__item {
+  display: block;
+
+  width: 100%;
+
+  flex-shrink: 0;
+
+  padding:
+    12px 10px;
+
+  border:
+    1px solid transparent;
+
+  background:
+    transparent;
+
+  color:
+    #aeb8b0;
+
+  text-align: left;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  /*
+   * Only animate visual properties.
+   *
+   * Do NOT animate dimensions or layout.
+   */
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.sidebar__item:hover {
+  border-color:
+    #3e4b43;
+
+  background:
+    #151a16;
+
+  color:
+    #e8eee9;
+}
+
+.sidebar__item--active {
+  border-color:
+    #3e4b43;
+
+  background:
+    #151a16;
+
+  color:
+    #e8eee9;
+}
+
+
+/* =========================================
+   BOTTOM AREA
+========================================= */
+
+.sidebar__bottom {
+  /*
+   * ONLY this element receives auto margin.
+   *
+   * This replaces the two competing
+   * margin-top:auto declarations from
+   * the previous layout.
+   */
+  margin-top: auto;
+
+  flex-shrink: 0;
+
+  border-top:
+    1px solid #2f3833;
+
+  background:
+    #0e110f;
+}
+
+
+/* =========================================
+   PERSONNEL PROFILE
+========================================= */
+
+.sidebar__footer {
+  /*
+   * Override old index.css:
+   * margin-top: auto;
+   */
+  margin-top: 0;
+
+  padding:
+    15px 10px;
+
+  border-top: 0;
+
+  border-bottom:
+    1px solid #202720;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  min-width: 0;
+
+  font-size:
+    0.7rem;
+
+  color:
+    #7e8981;
+}
+
+.sidebar__footer strong {
+  color:
+    #d8dedb;
+
+  font-size:
+    0.78rem;
+
+  line-height: 1.4;
+}
+
+.sidebar__personnel-name {
+  color:
+    #aeb8b0;
+
+  overflow-wrap:
+    anywhere;
+}
+
+
+/* =========================================
+   AUTHENTICATION AREA
+========================================= */
+
+.sidebar-auth {
+  /*
+   * Override old index.css:
+   * margin-top: auto;
+   */
+  margin-top: 0;
+
+  padding:
+    14px 10px 0;
+}
+
+.sidebar-auth__user {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
+  min-width: 0;
+
+  margin-bottom:
+    10px;
+}
+
+.sidebar-auth__user span {
+  font-size:
+    0.65rem;
+
+  font-weight:
+    bold;
+
+  letter-spacing:
+    0.1em;
+}
+
+.sidebar-auth__user small {
+  display: block;
+
+  max-width: 100%;
+
+  overflow-wrap:
+    anywhere;
+
+  color:
+    #7e8981;
+}
+
+.sidebar-auth__button {
+  width: 100%;
+
+  min-height: 40px;
+
+  padding:
+    10px;
+
+  border:
+    1px solid #3e4b43;
+
+  background:
+    transparent;
+
+  color:
+    #aeb8b0;
+
+  font-family:
+    inherit;
+
+  cursor: pointer;
+
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.sidebar-auth__button:hover {
+  border-color:
+    #536259;
+
+  background:
+    #151a16;
+
+  color:
+    #e8eee9;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.main-content {
+  flex:
+    1 1 auto;
+
+  /*
+   * Critical when children contain
+   * large grids/tables.
+   *
+   * Prevents them from pushing the
+   * sidebar sideways.
+   */
+  min-width: 0;
+
+  min-height:
+    calc(100dvh - 80px);
+
+  padding:
+    35px;
+
+  background:
+    #0b0d0c;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 800px) {
+
+  .sidebar {
+    width: 210px;
+
+    flex-basis:
+      210px;
+  }
+
+  .main-content {
+    padding:
+      25px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .app-layout__body {
+    flex-direction:
+      column;
+
+    min-height: auto;
+  }
+
+  .sidebar {
+    position: static;
+
+    top: auto;
+
+    width: 100%;
+
+    height: auto;
+
+    min-height: auto;
+
+    max-height: none;
+
+    flex:
+      0 0 auto;
+
+    overflow: visible;
+
+    border-right: 0;
+
+    border-bottom:
+      1px solid #2f3833;
+  }
+
+  .sidebar__navigation {
+    overflow: visible;
+
+    scrollbar-gutter: auto;
+  }
+
+  .sidebar__bottom {
+    margin-top:
+      16px;
+  }
+
+  /*
+   * Keep the mobile sidebar smaller.
+   */
+  .sidebar__footer {
+    display: none;
+  }
+
+  .main-content {
+    width: 100%;
+
+    min-height: auto;
+
+    padding:
+      20px;
+  }
+}

@@ -1,0 +1,549 @@
+/* =========================================
+   SITE-19 AUDIT LOG
+========================================= */
+
+.audit-log {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+
+/* =========================================
+   SUMMARY
+========================================= */
+
+.audit-summary {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  border:
+    1px solid #303733;
+
+  background:
+    #303733;
+
+  gap: 1px;
+}
+
+.audit-summary > div {
+  padding: 16px;
+
+  background:
+    #0d100e;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.audit-summary span {
+  color:
+    #747e78;
+
+  font-size:
+    0.65rem;
+
+  letter-spacing:
+    0.12em;
+}
+
+.audit-summary strong {
+  color:
+    #d2d8d4;
+
+  font-size:
+    1rem;
+}
+
+
+/* =========================================
+   CONTROLS
+========================================= */
+
+.audit-controls {
+  display: grid;
+
+  grid-template-columns:
+    minmax(220px, 1fr)
+    auto
+    auto
+    auto;
+
+  gap: 10px;
+}
+
+.audit-controls input,
+.audit-controls select,
+.audit-controls button {
+  min-height: 42px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid #343c37;
+
+  background:
+    #0b0e0c;
+
+  color:
+    #c5cdc7;
+
+  font-family:
+    inherit;
+
+  font-size:
+    0.72rem;
+}
+
+.audit-controls input,
+.audit-controls select {
+  padding:
+    10px 12px;
+
+  outline: none;
+}
+
+.audit-controls input:focus,
+.audit-controls select:focus {
+  border-color:
+    #59685f;
+}
+
+.audit-controls button {
+  padding:
+    10px 14px;
+
+  cursor: pointer;
+}
+
+.audit-controls button:hover:not(:disabled) {
+  background:
+    #151a17;
+}
+
+.audit-controls button:disabled {
+  opacity: 0.5;
+}
+
+
+/* =========================================
+   LOADING / ERROR / EMPTY
+========================================= */
+
+.audit-loading,
+.audit-error,
+.audit-empty {
+  padding: 22px;
+
+  border:
+    1px solid #343c37;
+
+  background:
+    #0d100e;
+}
+
+.audit-loading {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.audit-loading strong {
+  color:
+    #b6c1ba;
+}
+
+.audit-loading span {
+  color:
+    #737d77;
+
+  font-size:
+    0.7rem;
+}
+
+.audit-error {
+  border-color:
+    #694343;
+
+  color:
+    #c87d7d;
+}
+
+.audit-error p {
+  color:
+    #947e7e;
+}
+
+.audit-error button {
+  margin-top: 12px;
+
+  padding:
+    10px 12px;
+
+  border:
+    1px solid #694343;
+
+  background:
+    transparent;
+
+  color:
+    #c87d7d;
+
+  cursor: pointer;
+}
+
+.audit-empty {
+  color:
+    #777f7a;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   AUDIT EVENT
+========================================= */
+
+.audit-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.audit-event {
+  border:
+    1px solid #303733;
+
+  background:
+    #0c0f0d;
+}
+
+.audit-event__main {
+  display: grid;
+
+  grid-template-columns:
+    1.25fr
+    1fr
+    1fr
+    0.8fr
+    0.8fr
+    auto;
+
+  gap: 1px;
+
+  background:
+    #303733;
+}
+
+.audit-event__main > div {
+  padding:
+    14px;
+
+  background:
+    #0c0f0d;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.audit-event__main span {
+  color:
+    #6f7872;
+
+  font-size:
+    0.6rem;
+
+  letter-spacing:
+    0.1em;
+}
+
+.audit-event__main strong {
+  color:
+    #c7cec9;
+
+  font-size:
+    0.72rem;
+}
+
+.audit-event__main small {
+  color:
+    #747d77;
+
+  font-size:
+    0.62rem;
+}
+
+
+/* =========================================
+   OPERATION STATUS
+========================================= */
+
+.audit-operation--insert {
+  color:
+    #89a892 !important;
+}
+
+.audit-operation--update {
+  color:
+    #baa771 !important;
+}
+
+.audit-operation--delete {
+  color:
+    #bd7373 !important;
+}
+
+
+/* =========================================
+   DETAILS BUTTON
+========================================= */
+
+.audit-event__toggle {
+  min-width: 120px;
+
+  padding:
+    12px;
+
+  border: 0;
+
+  background:
+    #111612;
+
+  color:
+    #98a39c;
+
+  font-family:
+    inherit;
+
+  font-size:
+    0.65rem;
+
+  cursor: pointer;
+}
+
+.audit-event__toggle:hover {
+  background:
+    #171d19;
+
+  color:
+    #d0d7d2;
+}
+
+
+/* =========================================
+   EXPANDED DETAILS
+========================================= */
+
+.audit-event__details {
+  padding: 20px;
+
+  border-top:
+    1px solid #303733;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 22px;
+}
+
+.audit-event__details h3 {
+  margin:
+    0 0 12px;
+
+  color:
+    #89938d;
+
+  font-size:
+    0.68rem;
+
+  letter-spacing:
+    0.12em;
+}
+
+.audit-field-list {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 7px;
+}
+
+.audit-field-list span {
+  padding:
+    6px 9px;
+
+  border:
+    1px solid #343d37;
+
+  background:
+    #101411;
+
+  color:
+    #a9b3ac;
+
+  font-size:
+    0.62rem;
+}
+
+
+/* =========================================
+   CHANGE COMPARISON
+========================================= */
+
+.audit-change-table {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.audit-change-row {
+  display: grid;
+
+  grid-template-columns:
+    160px
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  border:
+    1px solid #303733;
+}
+
+.audit-change-row > strong,
+.audit-change-row > div {
+  padding: 12px;
+
+  border-right:
+    1px solid #303733;
+}
+
+.audit-change-row > div:last-child {
+  border-right: 0;
+}
+
+.audit-change-row > strong {
+  color:
+    #aeb7b1;
+
+  font-size:
+    0.68rem;
+}
+
+.audit-change-row > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.audit-change-row span {
+  color:
+    #69716c;
+
+  font-size:
+    0.58rem;
+
+  letter-spacing:
+    0.1em;
+}
+
+.audit-change-row code {
+  white-space:
+    pre-wrap;
+
+  overflow-wrap:
+    anywhere;
+
+  color:
+    #c1c9c3;
+
+  font-family:
+    inherit;
+
+  font-size:
+    0.68rem;
+}
+
+
+/* =========================================
+   RAW SNAPSHOT
+========================================= */
+
+.audit-event__details pre {
+  margin: 0;
+
+  max-height: 340px;
+
+  overflow: auto;
+
+  padding: 16px;
+
+  border:
+    1px solid #303733;
+
+  background:
+    #080a09;
+
+  color:
+    #aab4ad;
+
+  font-size:
+    0.68rem;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+  .audit-event__main {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .audit-event__toggle {
+    min-height: 42px;
+  }
+}
+
+@media (max-width: 800px) {
+  .audit-summary {
+    grid-template-columns:
+      1fr;
+  }
+
+  .audit-controls {
+    grid-template-columns:
+      1fr;
+  }
+
+  .audit-event__main {
+    grid-template-columns:
+      1fr;
+  }
+
+  .audit-change-row {
+    grid-template-columns:
+      1fr;
+  }
+
+  .audit-change-row > strong,
+  .audit-change-row > div {
+    border-right: 0;
+
+    border-bottom:
+      1px solid #303733;
+  }
+}

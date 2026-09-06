@@ -33,7 +33,8 @@ const navigationItems = [
 ];
 
 function Sidebar() {
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
   const {
     user,
@@ -44,9 +45,15 @@ function Sidebar() {
     logout,
   } = useAuth();
 
+  const isAdmin =
+    profile?.role === "ADMIN" &&
+    profile?.accountStatus === "ACTIVE";
+
   async function handleLogout() {
-    const { success, error } =
-      await logout();
+    const {
+      success,
+      error,
+    } = await logout();
 
     if (!success) {
       console.error(
@@ -57,10 +64,6 @@ function Sidebar() {
       return;
     }
 
-    /*
-     * Explicitly end navigation context
-     * for the current user.
-     */
     navigate(
       "/login",
       {
@@ -72,11 +75,23 @@ function Sidebar() {
   return (
     <aside className="sidebar">
 
+      {/* =========================
+          SIDEBAR HEADER
+      ========================= */}
+
       <p className="sidebar__title">
         SITE-19 // NAVIGATION
       </p>
 
-      <nav>
+      {/* =========================
+          NAVIGATION
+      ========================= */}
+
+      <nav
+        className="sidebar__navigation"
+        aria-label="Site-19 navigation"
+      >
+
         {navigationItems.map(
           (item) => (
             <NavLink
@@ -97,11 +112,15 @@ function Sidebar() {
           )
         )}
 
-        {profile?.role === "ADMIN" &&
-          profile?.accountStatus ===
-            "ACTIVE" && (
+        {/* =========================
+            ADMIN NAVIGATION
+        ========================= */}
+
+        {isAdmin && (
+          <>
             <NavLink
               to="/admin"
+              end
               className={({
                 isActive,
               }) =>
@@ -114,92 +133,121 @@ function Sidebar() {
             >
               ADMIN CONTROL
             </NavLink>
-          )}
+
+            <NavLink
+              to="/admin/audit"
+              className={({
+                isActive,
+              }) =>
+                `sidebar__item ${
+                  isActive
+                    ? "sidebar__item--active"
+                    : ""
+                }`
+              }
+            >
+              AUDIT LOG
+            </NavLink>
+          </>
+        )}
+
       </nav>
 
-      <div className="sidebar__footer">
+      {/* =========================
+          LOWER SIDEBAR
+      ========================= */}
 
-        {isAuthenticated && (
-          <>
-            {isProfileLoading ? (
-              <span>
-                LOADING PERSONNEL FILE...
-              </span>
-            ) : (
-              <>
+      <div className="sidebar__bottom">
+
+        {/* PERSONNEL PROFILE */}
+
+        <div className="sidebar__footer">
+
+          {isAuthenticated && (
+            <>
+              {isProfileLoading ? (
                 <span>
-                  {profile?.displayName ??
-                    "UNKNOWN PERSONNEL"}
+                  LOADING PERSONNEL FILE...
+                </span>
+              ) : (
+                <>
+                  <span className="sidebar__personnel-name">
+                    {profile?.displayName ??
+                      "UNKNOWN PERSONNEL"}
+                  </span>
+
+                  <strong>
+                    ROLE:{" "}
+                    {profile?.role ??
+                      "UNASSIGNED"}
+                  </strong>
+
+                  <strong>
+                    CLEARANCE LEVEL:{" "}
+                    {profile?.clearanceLevel ??
+                      0}
+                  </strong>
+
+                  <span>
+                    STATUS:{" "}
+                    {profile?.accountStatus ??
+                      "UNKNOWN"}
+                  </span>
+                </>
+              )}
+            </>
+          )}
+
+        </div>
+
+        {/* AUTH SESSION */}
+
+        <div className="sidebar-auth">
+
+          {isAuthLoading ? (
+            <span>
+              VERIFYING SESSION...
+            </span>
+          ) : isAuthenticated ? (
+            <>
+              <div className="sidebar-auth__user">
+
+                <span>
+                  AUTHENTICATED
                 </span>
 
-                <strong>
-                  ROLE:{" "}
-                  {profile?.role ??
-                    "UNASSIGNED"}
-                </strong>
+                <small>
+                  {user?.email}
+                </small>
 
-                <strong>
-                  CLEARANCE LEVEL:{" "}
-                  {profile?.clearanceLevel ??
-                    0}
-                </strong>
+              </div>
 
-                <span>
-                  STATUS:{" "}
-                  {profile?.accountStatus ??
-                    "UNKNOWN"}
-                </span>
-              </>
-            )}
-          </>
-        )}
-
-      </div>
-
-      <div className="sidebar-auth">
-
-        {isAuthLoading ? (
-          <span>
-            VERIFYING SESSION...
-          </span>
-        ) : isAuthenticated ? (
-          <>
-            <div className="sidebar-auth__user">
-
-              <span>
-                AUTHENTICATED
-              </span>
-
-              <small>
-                {user?.email}
-              </small>
-
-            </div>
-
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="sidebar-auth__button"
+              >
+                LOGOUT
+              </button>
+            </>
+          ) : (
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={() =>
+                navigate(
+                  "/login",
+                  {
+                    replace: true,
+                  }
+                )
+              }
               className="sidebar-auth__button"
             >
-              LOGOUT
+              LOGIN
             </button>
-          </>
-        ) : (
-          <button
-            type="button"
-            onClick={() =>
-              navigate(
-                "/login",
-                {
-                  replace: true,
-                }
-              )
-            }
-            className="sidebar-auth__button"
-          >
-            LOGIN
-          </button>
-        )}
+          )}
+
+        </div>
 
       </div>
 

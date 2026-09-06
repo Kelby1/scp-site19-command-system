@@ -28,6 +28,7 @@ import PendingAccess from "./pages/PendingAccess.jsx";
 import AccessDenied from "./pages/AccessDenied.jsx";
 
 import Admin from "./pages/Admin.jsx";
+import AuditLog from "./pages/AuditLog.jsx";
 
 function App() {
   return (
@@ -190,7 +191,7 @@ function App() {
       />
 
       {/* =========================
-          TERMINAL
+          SYSTEM TERMINAL
       ========================= */}
 
       <Route
@@ -240,6 +241,26 @@ function App() {
               <AdminRoute>
                 <MainLayout>
                   <Admin />
+                </MainLayout>
+              </AdminRoute>
+            </AccountGate>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* =========================
+          AUDIT LOG
+          ADMIN ONLY
+      ========================= */}
+
+      <Route
+        path="/admin/audit"
+        element={
+          <ProtectedRoute>
+            <AccountGate>
+              <AdminRoute>
+                <MainLayout>
+                  <AuditLog />
                 </MainLayout>
               </AdminRoute>
             </AccountGate>
