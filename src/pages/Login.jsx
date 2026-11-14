@@ -10,6 +10,7 @@ import {
 
 import { authService } from "../services/scp/auth/authService";
 import { useAuth } from "../context/AuthContext";
+import { isSupabaseConfigured } from "../lib/supabase";
 
 import "../styles/auth.css";
 
@@ -140,6 +141,13 @@ function Login() {
       return;
     }
 
+    if (!isSupabaseConfigured) {
+      setErrorMessage(
+        "DATABASE NOT CONFIGURED: Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env file, then restart npm run dev."
+      );
+      return;
+    }
+
     setIsSubmitting(true);
 
     const {
@@ -156,9 +164,15 @@ function Login() {
         error
       );
 
+      const isFetchError =
+        error.message?.includes("Failed to fetch") ||
+        error.name === "AuthRetryableFetchError";
+
       setErrorMessage(
-        error.message ??
-          "AUTHENTICATION FAILED. CHECK CREDENTIALS."
+        isFetchError
+          ? "CONNECTION FAILED: Unable to reach the Supabase backend. Please verify your VITE_SUPABASE_URL in .env and check your internet connection."
+          : (error.message ??
+              "AUTHENTICATION FAILED. CHECK CREDENTIALS.")
       );
 
       setIsSubmitting(false);
@@ -252,6 +266,22 @@ function Login() {
               )
             }
           />
+
+          {!isSupabaseConfigured && (
+            <div
+              className="auth-message auth-message--error"
+              style={{
+                lineHeight: "1.5",
+                fontSize: "0.72rem",
+                textAlign: "left",
+              }}
+            >
+              <strong>BACKEND CONFIGURATION REQUIRED</strong>
+              <div style={{ marginTop: "4px" }}>
+                Supabase credentials are missing. Add your <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> to <code>.env</code> in this project and restart <code>npm run dev</code>.
+              </div>
+            </div>
+          )}
 
           {errorMessage && (
             <div className="auth-message auth-message--error">

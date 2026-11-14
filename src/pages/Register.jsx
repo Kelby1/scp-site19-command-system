@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import { authService } from "../services/scp/auth/authService";
+import { isSupabaseConfigured } from "../lib/supabase";
 
 import "../styles/auth.css";
 
@@ -78,6 +79,13 @@ function Register() {
       return;
     }
 
+    if (!isSupabaseConfigured) {
+      setErrorMessage(
+        "DATABASE NOT CONFIGURED: Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env file, then restart npm run dev."
+      );
+      return;
+    }
+
     setIsLoading(true);
 
     const {
@@ -94,9 +102,14 @@ function Register() {
         error
       );
 
+      const isFetchError =
+        error.message?.includes("Failed to fetch") ||
+        error.name === "AuthRetryableFetchError";
+
       setErrorMessage(
-        error.message ??
-          "ACCOUNT REGISTRATION FAILED."
+        isFetchError
+          ? "CONNECTION FAILED: Unable to reach the Supabase backend. Please verify your VITE_SUPABASE_URL in .env."
+          : (error.message ?? "ACCOUNT REGISTRATION FAILED.")
       );
 
       setIsLoading(false);
